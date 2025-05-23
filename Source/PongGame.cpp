@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <sstream>
 
+#define PI 3.14159265358979323846f
+
 namespace ponggame
 {
 	std::string FormatTime(float seconds)
@@ -72,36 +74,62 @@ namespace ponggame
 	{
 		Game.bIsRKeyPressed = false;
 		Game.StartTime = AEGetTime(nullptr);
+		Game.DeltaTime = 0.f;
 		Game.Ball.posX = 0.f;
 		Game.Ball.posY = 0.f;
 		if (Game.Ball.Mesh == nullptr)
 		{
 			Game.Ball.CreateBallMesh();
 		}
+		srand(static_cast<unsigned int>(Game.StartTime));
+		float angle = static_cast<float>(rand()) / RAND_MAX * PI * 2.0f;
+		Game.Ball.dirX = cosf(angle);
+		Game.Ball.dirY = sinf(angle);
+		float Speed = 200.0f + static_cast<float>(rand()) / RAND_MAX * 300.0f;
+		Game.Ball.dirX *= Speed;
+		Game.Ball.dirY *= Speed;
 		update();
 	}
 	
 	void update()
 	{
 		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
+		f64 lastTime = AEGetTime(nullptr);
 		while (!Game.bIsRKeyPressed)
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+
+/*----------------DeltaTime----------------*/
+			f64 currentTime = AEGetTime(nullptr);
+			Game.DeltaTime = static_cast<f32>(currentTime - lastTime);
+			lastTime = currentTime;
+/*----------------DeltaTime----------------*/
+
+/*----------------Draw Time----------------*/
 			std::string Time = FormatTime(AEGetTime(nullptr) - Game.StartTime);
 			f32 TimeW, TimeH;
 			AEGfxGetPrintSize(font, Time.c_str(), 1.f, &TimeW, &TimeH);
 			AEGfxPrint(font, Time.c_str(), -TimeW/2, 0.7f, 1.f, 1, 1, 1, 1);
+/*----------------Draw Time----------------*/
+
+/*----------------Restart----------------*/
 			if (AEInputCheckTriggered(AEVK_R))
 			{
 				Game.bIsRKeyPressed = true;
 				break;
 			}
+/*----------------Restart----------------*/
+
 /*----------------Draw Random Box----------------*/
 //remove later
 			DrawSprite(CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
 /*----------------Draw Random Box----------------*/
+
+/*----------------Draw Ball----------------*/
+			Game.Ball.UpdatePosition(Game.DeltaTime);
 			DrawSprite(Game.Ball.Mesh, Game.Ball.posX, Game.Ball.posY, 100.f, 100.f, 0.f);
+/*----------------Draw Ball----------------*/
 			AESysFrameEnd();
 		}
 		exit();

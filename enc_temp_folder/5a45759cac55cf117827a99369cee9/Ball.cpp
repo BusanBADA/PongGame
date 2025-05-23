@@ -49,6 +49,5 @@ void ponggame::FBall::UpdatePosition(f32 dt)
     {
         dirY *= -1;
     }
-//      debug
-//    std::cout << "Ball X : " << posX << " Y : " << posY << std::endl;
+    std::cout << "Ball X : " << posX << " Y : " << posY << std::endl;
 }

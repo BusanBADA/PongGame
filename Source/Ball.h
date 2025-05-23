@@ -9,6 +9,10 @@ namespace ponggame
 		AEGfxVertexList* Mesh = nullptr;
 		f32 posX;
 		f32 posY;
+		f32 dirX;
+		f32 dirY;
 		void CreateBallMesh(u32 color = 0xFFFFFFFF);
+
+		void UpdatePosition(f32 dt);
 	};
 }
