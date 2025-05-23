@@ -2,7 +2,7 @@
 #include "Ball.h"
 #include <iostream>
 #define PI 3.14159265358979323846f
-float radius = 0.5f;
+
 ponggame::FBall::FBall()
 {
 
@@ -21,10 +21,10 @@ void ponggame::FBall::CreateBallMesh(u32 color)
         float angle2 = (2.0f * PI * (i + 1)) / sides;
 
         float x0 = 0.0f, y0 = 0.0f;
-        float x1 = cosf(angle1) * radius;
-        float y1 = sinf(angle1) * radius;
-        float x2 = cosf(angle2) * radius;
-        float y2 = sinf(angle2) * radius;
+        float x1 = cosf(angle1) * (radius / 100);
+        float y1 = sinf(angle1) * (radius / 100);
+        float x2 = cosf(angle2) * (radius / 100);
+        float y2 = sinf(angle2) * (radius / 100);
 
         AEGfxTriAdd(
             x0, y0, color, 0.0f, 0.0f,
@@ -36,16 +36,21 @@ void ponggame::FBall::CreateBallMesh(u32 color)
     Mesh = AEGfxMeshEnd();
 }
 
-void ponggame::FBall::UpdatePosition(f32 dt)
+void ponggame::FBall::UpdatePosition(f32 dt, bool& bIsHitLeft, bool& bIsHitRight)
 {
     posX += dirX * dt;
     posY += dirY * dt;
-    if (posX < -800.f + radius * 100 || posX > 800 - radius * 100)
+    if (posX < -800.f + radius)
     {
         dirX *= -1;
+        bIsHitLeft = true;
     }
-        
-    if (posY < -450.f + radius * 100 || posY > 450 - radius * 100)
+    if (posX > 800 - radius)
+    {
+        dirX *= -1;
+        bIsHitRight = true;
+    }
+    if (posY < -450.f + radius || posY > 450 - radius)
     {
         dirY *= -1;
     }
