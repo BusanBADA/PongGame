@@ -1,14 +1,19 @@
 #include "AEEngine.h"
+#include "Ball.h"
 namespace ponggame
 {
 	class Actor
 	{
+	public:
 		f32 sizeX;
 		f32 sizeY;
 		f32 posX;
 		f32	posY;
 		u8 score = 0;
 	};
+	
+	
+	
 	class FGame
 	{
 	public:
@@ -16,8 +21,11 @@ namespace ponggame
 		f64 StartTime = 0.f;
 		Actor LeftActor;
 		Actor RightActor;
+		FBall Ball;
 		bool bIsRKeyPressed = false;
 	};
+
+
 
 	void Init();
 	void update();
@@ -31,9 +39,9 @@ R 누르면 게임 재 시작.													<-- 완료
 
 게임 시작부터 흘러간 시간이 게임 화면 중앙 상단에 출력됨.				<-- 완료
 
-임시로 직사각형 오브젝트가 게임 화면 아무 좌표에서 시작함.
+임시로 직사각형 오브젝트가 게임 화면 아무 좌표에서 시작함.				<-- 완료
 
-공 오브젝트는 화면 정 중앙에서 시작함.
+공 오브젝트는 화면 정 중앙에서 시작함.									<-- 완료
 
 게임이 시작하면, 공이 랜덤한 초기 속도를 가지고 움직이기 시작함.	
 
