@@ -3,10 +3,11 @@
 #include <sstream>
 #include <iostream>
 
-#define PI 3.14159265358979323846f
 
 namespace ponggame
 {
+	FGame Game;
+
 	std::string FormatTime(float seconds)
 	{
 		int totalSeconds = static_cast<int>(seconds);
@@ -101,9 +102,9 @@ namespace ponggame
 	}
 
 
-	FGame Game;
+	
 
-	void Init()
+	void FGame::Init()
 	{
 		srand(static_cast<unsigned int>(time(nullptr)));
 		Game.bIsRKeyPressed = false;
@@ -126,24 +127,27 @@ namespace ponggame
 		Game.LeftActor.score = 0;
 		Game.LeftActor.posY = 0;
 		Game.LeftActor.posX = -800.f*(2.f / 3.f);
-		Game.LeftActor.Mesh = CreateBoxMesh();
+		if (Game.LeftActor.Mesh == nullptr)
+		{
+			Game.LeftActor.Mesh = CreateBoxMesh();
+		}
 
 		Game.RightActor.score = 0;
 		Game.RightActor.posY = 0;
 		Game.RightActor.posX = +800.f * (2.f / 3.f);
-		Game.RightActor.Mesh = CreateBoxMesh();
-
+		if (Game.RightActor.Mesh == nullptr)
+		{
+			Game.RightActor.Mesh = CreateBoxMesh();
+		}
 
 		Game.RightActor.score = 0;
-
-		update();
 	}
 	
-	void update()
+	void FGame::Update()
 	{
 		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
 		f64 lastTime = AEGetTime(nullptr);
-		while (!Game.bIsRKeyPressed)
+		while (!Game.bIsRKeyPressed && AESysDoesWindowExist())
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
@@ -154,10 +158,10 @@ namespace ponggame
 			const f32 screenWidth = 1600.0f;
 			const f32 screenHeight = 800.0f;
 
-			// 스크린 → 월드 좌표계 변환
-			f32 worldX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
-			f32 worldY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
-			Game.RightActor.posY = worldY*400;
+			// 스크린 → Normalized Device Coordinate 변환
+			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
+			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
+			Game.RightActor.posY = NDCY *400;
 
 			if (AEInputCheckCurr(AEVK_W))
 			{
@@ -167,6 +171,13 @@ namespace ponggame
 			{
 				Game.LeftActor.posY -= 2.0f;
 			}
+/*----------------Restart----------------*/
+			if (AEInputCheckTriggered(AEVK_R))
+			{
+				Game.bIsRKeyPressed = true;
+				break;
+			}
+/*----------------Restart----------------*/
 
 /*----------------DeltaTime----------------*/
 			f64 currentTime = AEGetTime(nullptr);
@@ -181,13 +192,7 @@ namespace ponggame
 			AEGfxPrint(font, Time.c_str(), -TimeW/2, 0.7f, 1.f, 1, 1, 1, 1);
 /*----------------Draw Time----------------*/
 
-/*----------------Restart----------------*/
-			if (AEInputCheckTriggered(AEVK_R))
-			{
-				Game.bIsRKeyPressed = true;
-				break;
-			}
-/*----------------Restart----------------*/
+
 
 /*----------------Draw Box----------------*/
 //remove later
@@ -239,13 +244,12 @@ namespace ponggame
 
 			AESysFrameEnd();
 		}
-		exit();
 	}
 
-	void exit()
+	void FGame::Exit()
 	{
 		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
-		while (!Game.bIsRKeyPressed)
+		while (!Game.bIsRKeyPressed && AESysDoesWindowExist())
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);

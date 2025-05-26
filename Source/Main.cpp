@@ -30,7 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		AEGfxPrint(font, "Press Any Key To Start", -0.5f, 0.4f, 1.f, 1, 1, 1, 1);
 		for (u8 key = 0x01; key <= 0xFE; ++key)
 		{
-			if (key == 0x15)
+			if (key == 0x15 || key == 0x19)
 			{
 				continue;
 			}
@@ -42,7 +42,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		}
 		AESysFrameEnd();
 	}
-	ponggame::Init();
-
+	while (AESysDoesWindowExist())
+	{
+		ponggame::Game.Init();
+		ponggame::Game.Update();
+		ponggame::Game.Exit();
+	}
+	if (ponggame::Game.LeftActor.Mesh != nullptr)
+	{
+		AEGfxMeshFree(ponggame::Game.LeftActor.Mesh);
+	}
+	if (ponggame::Game.RightActor.Mesh != nullptr)
+	{
+		AEGfxMeshFree(ponggame::Game.RightActor.Mesh);
+	}
+	if (ponggame::Game.Ball.Mesh != nullptr)
+	{
+		AEGfxMeshFree(ponggame::Game.Ball.Mesh);
+	}
+	AESysExit();
 	return 0;
 }

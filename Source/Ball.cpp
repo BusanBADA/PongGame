@@ -1,7 +1,6 @@
 ﻿#include <math.h> // sin, cos
 #include "Ball.h"
 #include <iostream>
-#define PI 3.14159265358979323846f
 
 ponggame::FBall::FBall()
 {

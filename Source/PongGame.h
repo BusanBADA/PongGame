@@ -5,11 +5,11 @@ namespace ponggame
 	class Actor
 	{
 	public:
-		AEGfxVertexList* Mesh;
+		AEGfxVertexList* Mesh = nullptr;
 		f32 sizeX = 30.f;
 		f32 sizeY = 150.f;
-		f32 posX;
-		f32	posY;
+		f32 posX = 0.f;
+		f32	posY = 0.f;
 		int score = 0;
 	};
 	
@@ -25,13 +25,14 @@ namespace ponggame
 		FBall Ball;
 		bool bIsRKeyPressed = false;
 		f32 DeltaTime = 0.f;
+		void Init();
+		void Update();
+		void Exit();
 	};
 
+	extern FGame Game;
 
 
-	void Init();
-	void update();
-	void exit();
 }
 
 /* TODO LIST
