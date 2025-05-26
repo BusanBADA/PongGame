@@ -123,7 +123,14 @@ namespace ponggame
 
 		Game.LeftActor.score = 0;
 		Game.LeftActor.posY = 0;
-		Game.LeftActor.posX = 
+		Game.LeftActor.posX = -800.f*(2.f / 3.f);
+		Game.LeftActor.Mesh = CreateBoxMesh();
+
+		Game.RightActor.score = 0;
+		Game.RightActor.posY = 0;
+		Game.RightActor.posX = +800.f * (2.f / 3.f);
+		Game.RightActor.Mesh = CreateBoxMesh();
+
 
 		Game.RightActor.score = 0;
 
@@ -138,6 +145,26 @@ namespace ponggame
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+
+			s32 MX;
+			s32 MY;
+			AEInputGetCursorPosition(&MX, &MY);
+			const f32 screenWidth = 1600.0f;
+			const f32 screenHeight = 800.0f;
+
+			// 스크린 → 월드 좌표계 변환
+			f32 worldX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
+			f32 worldY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
+			Game.RightActor.posY = worldY*400;
+
+			if (AEInputCheckCurr(AEVK_W))
+			{
+				Game.LeftActor.posY += 2.0f;
+			}
+			else if (AEInputCheckCurr(AEVK_S))
+			{
+				Game.LeftActor.posY -= 2.0f;
+			}
 
 /*----------------DeltaTime----------------*/
 			f64 currentTime = AEGetTime(nullptr);
@@ -160,10 +187,15 @@ namespace ponggame
 			}
 /*----------------Restart----------------*/
 
-/*----------------Draw Random Box----------------*/
+/*----------------Draw Box----------------*/
 //remove later
-			ResolveBallBoxCollision(Game.Ball, 200.f, 150.f, 100.f, 100.f);
-			DrawSprite(CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
+			ResolveBallBoxCollision(Game.Ball, Game.LeftActor.posX, Game.LeftActor.posY, Game.LeftActor.sizeX, Game.LeftActor.sizeY);
+			ResolveBallBoxCollision(Game.Ball, Game.RightActor.posX, Game.RightActor.posY, Game.RightActor.sizeX, Game.RightActor.sizeY);
+			DrawSprite(Game.LeftActor.Mesh, Game.LeftActor.posX, Game.LeftActor.posY, Game.LeftActor.sizeX, Game.LeftActor.sizeY, 0.f);
+			DrawSprite(Game.RightActor.Mesh, Game.RightActor.posX, Game.RightActor.posY, Game.RightActor.sizeX, Game.RightActor.sizeY, 0.f);
+/*----------------Draw Box----------------*/
+/*----------------Draw Random Box----------------*/
+			//DrawSprite(CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
 /*----------------Draw Random Box----------------*/
 
 /*----------------CheckCollision----------------*/
