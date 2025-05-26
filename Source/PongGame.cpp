@@ -105,6 +105,7 @@ namespace ponggame
 
 	void Init()
 	{
+		srand(static_cast<unsigned int>(time(nullptr)));
 		Game.bIsRKeyPressed = false;
 		Game.StartTime = AEGetTime(nullptr);
 		Game.DeltaTime = 0.f;
@@ -114,7 +115,8 @@ namespace ponggame
 		{
 			Game.Ball.CreateBallMesh();
 		}
-		float angle = static_cast<float>(rand()) / RAND_MAX * PI * 2.0f;
+		float angle = static_cast<float>(rand()) / PI;
+		std::cout << angle;
 		Game.Ball.dirX = cosf(angle);
 		Game.Ball.dirY = sinf(angle);
 		float Speed = 200.0f + static_cast<float>(rand()) / RAND_MAX * 300.0f;
@@ -205,12 +207,18 @@ namespace ponggame
 			if (bIsHitLeft)
 			{
 				Game.RightActor.score++;
-				std::cout << Game.RightActor.score << std::endl;
+				if (Game.RightActor.score > 10)
+				{
+					break;
+				}
 			}
 			if (bIsHitRight)
 			{
 				Game.LeftActor.score++;
-				std::cout << Game.LeftActor.score << std::endl;
+				if (Game.LeftActor.score > 10)
+				{
+					break;
+				}
 			}
 /*----------------CheckCollision----------------*/
 
@@ -236,6 +244,32 @@ namespace ponggame
 
 	void exit()
 	{
+		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
+		while (!Game.bIsRKeyPressed)
+		{
+			AESysFrameStart();
+			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+			if (Game.LeftActor.score > 10)
+			{
+				std::string str = "Left Player Wins";
+				f32 strW, strH;
+				AEGfxGetPrintSize(font, str.c_str(), 1.f, &strW, &strH);
+				AEGfxPrint(font, str.c_str(), -(strW / 2), 0.7f, 1.f, 1, 1, 1, 1);
+			}
+			else
+			{
+				std::string str = "Right Player Wins";
+				f32 strW, strH;
+				AEGfxGetPrintSize(font, str.c_str(), 1.f, &strW, &strH);
+				AEGfxPrint(font, str.c_str(), -(strW / 2), 0.7f, 1.f, 1, 1, 1, 1);
+			}
+			if (AEInputCheckTriggered(AEVK_R))
+			{
+				Game.bIsRKeyPressed = true;
+				break;
+			}
+			AESysFrameEnd();
+		}
 		if (Game.bIsRKeyPressed)
 		{
 			Init();
