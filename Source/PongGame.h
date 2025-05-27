@@ -18,6 +18,8 @@ namespace ponggame
 	class FGame
 	{
 	public:
+		bool bFontLoadFlag = false;
+		s8 font;
 		f64 Time = 0.f;
 		f64 StartTime = 0.f;
 		Actor LeftActor;
@@ -25,14 +27,23 @@ namespace ponggame
 		FBall Ball;
 		bool bIsRKeyPressed = false;
 		f32 DeltaTime = 0.f;
-		void Init();
+		void ResetGame();
 		void Update();
-		void Exit();
+		void EndGame();
+	};
+
+	class FGameState
+	{
+	public:
+		bool bIsPreGameState = true;
+		bool bShouldResetGame = false;
+		bool bIsGameRunning = false;
+		bool bIsGameEnded = false;
 	};
 
 	extern FGame Game;
-
-
+	extern FGameState GameState;
+	
 }
 
 /* TODO LIST

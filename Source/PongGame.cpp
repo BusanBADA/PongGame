@@ -7,6 +7,7 @@
 namespace ponggame
 {
 	FGame Game;
+	FGameState GameState;
 
 	std::string FormatTime(float seconds)
 	{
@@ -104,50 +105,56 @@ namespace ponggame
 
 	
 
-	void FGame::Init()
+	void FGame::ResetGame()
 	{
-		srand(static_cast<unsigned int>(time(nullptr)));
-		Game.bIsRKeyPressed = false;
-		Game.StartTime = AEGetTime(nullptr);
-		Game.DeltaTime = 0.f;
-		Game.Ball.posX = 0.f;
-		Game.Ball.posY = 0.f;
-		if (Game.Ball.Mesh == nullptr)
+		if (bFontLoadFlag == false)
 		{
-			Game.Ball.CreateBallMesh();
+			font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
+			bFontLoadFlag = true;
+		}
+		srand(static_cast<unsigned int>(time(nullptr)));
+		bIsRKeyPressed = false;
+		StartTime = AEGetTime(nullptr);
+		DeltaTime = 0.f;
+		Ball.posX = 0.f;
+		Ball.posY = 0.f;
+		if (Ball.Mesh == nullptr)
+		{
+			Ball.CreateBallMesh();
 		}
 		float angle = static_cast<float>(rand()) / PI;
 		std::cout << angle;
-		Game.Ball.dirX = cosf(angle);
-		Game.Ball.dirY = sinf(angle);
+		Ball.dirX = cosf(angle);
+		Ball.dirY = sinf(angle);
 		float Speed = 200.0f + static_cast<float>(rand()) / RAND_MAX * 300.0f;
-		Game.Ball.dirX *= Speed;
-		Game.Ball.dirY *= Speed;
+		Ball.dirX *= Speed;
+		Ball.dirY *= Speed;
 
-		Game.LeftActor.score = 0;
-		Game.LeftActor.posY = 0;
-		Game.LeftActor.posX = -800.f*(2.f / 3.f);
-		if (Game.LeftActor.Mesh == nullptr)
+		LeftActor.score = 0;
+		LeftActor.posY = 0;
+		LeftActor.posX = -800.f*(2.f / 3.f);
+		if (LeftActor.Mesh == nullptr)
 		{
-			Game.LeftActor.Mesh = CreateBoxMesh();
+			LeftActor.Mesh = CreateBoxMesh();
 		}
 
-		Game.RightActor.score = 0;
-		Game.RightActor.posY = 0;
-		Game.RightActor.posX = +800.f * (2.f / 3.f);
-		if (Game.RightActor.Mesh == nullptr)
+		RightActor.score = 0;
+		RightActor.posY = 0;
+		RightActor.posX = +800.f * (2.f / 3.f);
+		if (RightActor.Mesh == nullptr)
 		{
-			Game.RightActor.Mesh = CreateBoxMesh();
+			RightActor.Mesh = CreateBoxMesh();
 		}
 
-		Game.RightActor.score = 0;
+		RightActor.score = 0;
+		GameState.bIsGameEnded = false;
+		GameState.bIsGameRunning = true;
+		GameState.bShouldResetGame = false;
 	}
 	
 	void FGame::Update()
 	{
-		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
-		f64 lastTime = AEGetTime(nullptr);
-		while (!Game.bIsRKeyPressed && AESysDoesWindowExist())
+		if (!bIsRKeyPressed && AESysDoesWindowExist())
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
@@ -161,46 +168,39 @@ namespace ponggame
 			// 스크린 → Normalized Device Coordinate 변환
 			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
 			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
-			Game.RightActor.posY = NDCY *400;
+			RightActor.posY = NDCY *400;
 
 			if (AEInputCheckCurr(AEVK_W))
 			{
-				Game.LeftActor.posY += 2.0f;
+				LeftActor.posY += 5.0f;
 			}
 			else if (AEInputCheckCurr(AEVK_S))
 			{
-				Game.LeftActor.posY -= 2.0f;
+				LeftActor.posY -= 5.0f;
 			}
 /*----------------Restart----------------*/
 			if (AEInputCheckTriggered(AEVK_R))
 			{
-				Game.bIsRKeyPressed = true;
-				break;
+				bIsRKeyPressed = true;
 			}
 /*----------------Restart----------------*/
 
-/*----------------DeltaTime----------------*/
-			f64 currentTime = AEGetTime(nullptr);
-			Game.DeltaTime = static_cast<f32>(currentTime - lastTime);
-			lastTime = currentTime;
-/*----------------DeltaTime----------------*/
 
 /*----------------Draw Time----------------*/
-			std::string Time = FormatTime(AEGetTime(nullptr) - Game.StartTime);
+			std::string Time = FormatTime(AEGetTime(nullptr) - StartTime);
 			f32 TimeW, TimeH;
 			AEGfxGetPrintSize(font, Time.c_str(), 1.f, &TimeW, &TimeH);
 			AEGfxPrint(font, Time.c_str(), -TimeW/2, 0.7f, 1.f, 1, 1, 1, 1);
 /*----------------Draw Time----------------*/
 
-
-
 /*----------------Draw Box----------------*/
 //remove later
-			ResolveBallBoxCollision(Game.Ball, Game.LeftActor.posX, Game.LeftActor.posY, Game.LeftActor.sizeX, Game.LeftActor.sizeY);
-			ResolveBallBoxCollision(Game.Ball, Game.RightActor.posX, Game.RightActor.posY, Game.RightActor.sizeX, Game.RightActor.sizeY);
-			DrawSprite(Game.LeftActor.Mesh, Game.LeftActor.posX, Game.LeftActor.posY, Game.LeftActor.sizeX, Game.LeftActor.sizeY, 0.f);
-			DrawSprite(Game.RightActor.Mesh, Game.RightActor.posX, Game.RightActor.posY, Game.RightActor.sizeX, Game.RightActor.sizeY, 0.f);
+			ResolveBallBoxCollision(Ball, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY);
+			ResolveBallBoxCollision(Ball, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY);
+			DrawSprite(LeftActor.Mesh, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY, 0.f);
+			DrawSprite(RightActor.Mesh, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY, 0.f);
 /*----------------Draw Box----------------*/
+
 /*----------------Draw Random Box----------------*/
 			//DrawSprite(CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
 /*----------------Draw Random Box----------------*/
@@ -208,35 +208,37 @@ namespace ponggame
 /*----------------CheckCollision----------------*/
 			bool bIsHitLeft = false;
 			bool bIsHitRight = false;
-			Game.Ball.UpdatePosition(Game.DeltaTime, bIsHitLeft, bIsHitRight);
+			Ball.UpdatePosition(DeltaTime, bIsHitLeft, bIsHitRight);
 			if (bIsHitLeft)
 			{
-				Game.RightActor.score++;
-				if (Game.RightActor.score > 10)
+				RightActor.score++;
+				if (RightActor.score > 10)
 				{
-					break;
+					GameState.bIsGameRunning = false;
+					GameState.bIsGameEnded = true;
 				}
 			}
 			if (bIsHitRight)
 			{
-				Game.LeftActor.score++;
-				if (Game.LeftActor.score > 10)
+				LeftActor.score++;
+				if (LeftActor.score > 10)
 				{
-					break;
+					GameState.bIsGameRunning = false;
+					GameState.bIsGameEnded = true;
 				}
 			}
 /*----------------CheckCollision----------------*/
 
 /*----------------Draw Ball----------------*/
-			DrawSprite(Game.Ball.Mesh, Game.Ball.posX, Game.Ball.posY, 100.f, 100.f, 0.f);
+			DrawSprite(Ball.Mesh, Ball.posX, Ball.posY, 100.f, 100.f, 0.f);
 /*----------------Draw Ball----------------*/
 			
 /*----------------Draw Time----------------*/
-			std::string LeftScore = std::to_string(Game.LeftActor.score);
+			std::string LeftScore = std::to_string(LeftActor.score);
 			f32 LeftScoreW, LeftScoreH;
 			AEGfxGetPrintSize(font, LeftScore.c_str(), 1.f, &LeftScoreW, &LeftScoreH);
 			AEGfxPrint(font, LeftScore.c_str(), -LeftScoreW / 2 - 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
-			std::string RightScore = std::to_string(Game.RightActor.score);
+			std::string RightScore = std::to_string(RightActor.score);
 			f32 RightScoreW, RightScoreH;
 			AEGfxGetPrintSize(font, RightScore.c_str(), 1.f, &RightScoreW, &RightScoreH);
 			AEGfxPrint(font, RightScore.c_str(), -RightScoreW / 2 + 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
@@ -244,16 +246,19 @@ namespace ponggame
 
 			AESysFrameEnd();
 		}
+		else if (bIsRKeyPressed)
+		{
+			GameState.bShouldResetGame = true;
+		}
 	}
 
-	void FGame::Exit()
+	void FGame::EndGame()
 	{
-		s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
-		while (!Game.bIsRKeyPressed && AESysDoesWindowExist())
+		if (!bIsRKeyPressed && AESysDoesWindowExist())
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
-			if (Game.LeftActor.score > 10)
+			if (LeftActor.score > 10)
 			{
 				std::string str = "Left Player Wins";
 				f32 strW, strH;
@@ -269,14 +274,13 @@ namespace ponggame
 			}
 			if (AEInputCheckTriggered(AEVK_R))
 			{
-				Game.bIsRKeyPressed = true;
-				break;
+				bIsRKeyPressed = true;
 			}
 			AESysFrameEnd();
 		}
-		if (Game.bIsRKeyPressed)
+		if (bIsRKeyPressed)
 		{
-			Init();
+			GameState.bShouldResetGame = true;
 		}
 	}
 }
