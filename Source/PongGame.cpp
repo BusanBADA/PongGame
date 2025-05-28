@@ -1,9 +1,10 @@
 #include "PongGame.h"
+#include "GlobalFunc.h"
 #include <iomanip>
 #include <sstream>
 #include <iostream>
-
-
+#include "Logo.h"
+#include "MainMenu.h"
 namespace ponggame
 {
 	FGame Game;
@@ -22,54 +23,9 @@ namespace ponggame
 		return oss.str();
 	}
 
-	AEGfxVertexList* CreateBoxMesh(u32 color = 0xFFFFFFFF)
-	{
-		AEGfxMeshStart();
+	
 
-		AEGfxTriAdd(
-			-0.5f, -0.5f, color, 0.0f, 1.0f,  // bottom-left
-			0.5f, -0.5f, color, 1.0f, 1.0f,  // bottom-right
-			-0.5f, 0.5f, color, 0.0f, 0.0f); // top-left
-
-		AEGfxTriAdd(
-			0.5f, -0.5f, color, 1.0f, 1.0f,  // bottom-right
-			0.5f, 0.5f, color, 1.0f, 0.0f,  // top-right
-			-0.5f, 0.5f, color, 0.0f, 0.0f); // top-left
-
-		return AEGfxMeshEnd();
-	}
-
-	void DrawSprite(AEGfxVertexList* mesh, float posX, float posY, float scaleX, float scaleY, float rotation)
-	{
-		// 스케일 행렬
-		AEMtx33 scaleMtx;
-		AEMtx33Scale(&scaleMtx, scaleX, scaleY);
-
-		// 회전 행렬
-		AEMtx33 rotMtx;
-		AEMtx33Rot(&rotMtx, rotation);
-
-		// 이동 행렬
-		AEMtx33 transMtx;
-		AEMtx33Trans(&transMtx, posX, posY);
-
-		// 최종 변환 행렬: Translate * Rotate * Scale
-		AEMtx33 transform;
-		AEMtx33Concat(&transform, &rotMtx, &scaleMtx);
-		AEMtx33Concat(&transform, &transMtx, &transform);
-
-		// 렌더링 세팅
-		AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-		AEGfxSetColorToMultiply(1.f, 1.f, 1.f, 1.f);
-		AEGfxSetColorToAdd(0.f, 0.f, 0.f, 0.f);
-		AEGfxSetBlendMode(AE_GFX_BM_BLEND);
-		AEGfxSetTransparency(1.0f);
-		AEGfxSetRenderMode(AE_GFX_RM_COLOR);
-		AEGfxSetTransform(transform.m);
-
-		// 그리기
-		AEGfxMeshDraw(mesh, AE_GFX_MDM_TRIANGLES);
-	}
+	
 
 	void ResolveBallBoxCollision(ponggame::FBall& ball, float boxX, float boxY, float boxW, float boxH)
 	{
@@ -102,16 +58,103 @@ namespace ponggame
 		}
 	}
 
-
-	
-
-	void FGame::ResetGame()
+	void FGame::DrawSplashScreen()
 	{
 		if (bFontLoadFlag == false)
 		{
 			font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
 			bFontLoadFlag = true;
 		}
+		AESysFrameStart();
+		GameState.PreGameTimer += DeltaTime;
+		if (GameState.PreGameTimer <= 1.f)
+		{
+			//fade in
+			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+			AEMtx33 scale = { 0 };
+			AEMtx33Scale(&scale, 500.f, 500.f);
+			AEMtx33 rotate = { 0 };
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33 translate = { 0 };
+			AEMtx33Trans(&translate, 0, 0);
+			AEMtx33 transform = { 0 };
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxSetColorToMultiply(1.0f, 1.0f, 1.0f, GameState.PreGameTimer);
+			AEGfxSetColorToAdd(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+			AEGfxSetTransparency(1.0f);
+			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(logo::Logo.Mesh, AE_GFX_MDM_TRIANGLES);
+			//std::string Title = "PongGame";
+			//f32 TitleW, TitleH;
+			//AEGfxGetPrintSize(font, Title.c_str(), 1.f, &TitleW, &TitleH);
+			//AEGfxPrint(font, Title.c_str(), -TitleW / 2, 0.f, 1.f, 1, 1, 1, GameState.PreGameTimer);
+		}
+		else if (GameState.PreGameTimer <= 2.f)
+		{
+			//fade out
+			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+			AEMtx33 scale = { 0 };
+			AEMtx33Scale(&scale, 500.f, 500.f);
+			AEMtx33 rotate = { 0 };
+			AEMtx33Rot(&rotate, 0);
+			AEMtx33 translate = { 0 };
+			AEMtx33Trans(&translate, 0, 0);
+			AEMtx33 transform = { 0 };
+			AEMtx33Concat(&transform, &rotate, &scale);
+			AEMtx33Concat(&transform, &translate, &transform);
+			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxSetColorToMultiply(1.0f, 1.0f, 1.0f, 1 - (GameState.PreGameTimer - 1));
+			AEGfxSetColorToAdd(0.0f, 0.0f, 0.0f, 0.0f);
+			AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+			AEGfxSetTransparency(1.0f);
+			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxSetTransform(transform.m);
+			AEGfxMeshDraw(logo::Logo.Mesh, AE_GFX_MDM_TRIANGLES);
+			//AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+			//std::string Title = "PongGame";
+			//f32 TitleW, TitleH;
+			//AEGfxGetPrintSize(font, Title.c_str(), 1.f, &TitleW, &TitleH);
+			//AEGfxPrint(font, Title.c_str(), -TitleW / 2, 0.f, 1.f, 1, 1, 1, 1 - (GameState.PreGameTimer - 1));
+		}
+		else
+		{
+			GameState.bIsPreGameState = false;
+			GameState.bIsMainMenu = true;
+		}
+
+		for (u8 key = 0x01; key <= 0xFE; ++key)
+		{
+			if (key == 0x15 || key == 0x19)
+			{
+				continue;
+			}
+			if (AEInputCheckTriggered(key))
+			{
+				GameState.bIsPreGameState = false;
+				GameState.bIsMainMenu = true;
+				break;
+			}
+		}
+		AESysFrameEnd();
+	}
+
+	void FGame::DrawMainMenu()
+	{
+		AESysFrameStart();
+		mainmenu::MainMenu.ButtonA->DrawButton();
+		mainmenu::MainMenu.ButtonB->DrawButton();
+
+		AESysFrameEnd();
+	}
+
+	void FGame::ResetGame()
+	{
 		srand(static_cast<unsigned int>(time(nullptr)));
 		bIsRKeyPressed = false;
 		StartTime = AEGetTime(nullptr);
@@ -135,7 +178,7 @@ namespace ponggame
 		LeftActor.posX = -800.f*(2.f / 3.f);
 		if (LeftActor.Mesh == nullptr)
 		{
-			LeftActor.Mesh = CreateBoxMesh();
+			LeftActor.Mesh = global::CreateBoxMesh();
 		}
 
 		RightActor.score = 0;
@@ -143,7 +186,7 @@ namespace ponggame
 		RightActor.posX = +800.f * (2.f / 3.f);
 		if (RightActor.Mesh == nullptr)
 		{
-			RightActor.Mesh = CreateBoxMesh();
+			RightActor.Mesh = global::CreateBoxMesh();
 		}
 
 		RightActor.score = 0;
@@ -163,21 +206,62 @@ namespace ponggame
 			s32 MY;
 			AEInputGetCursorPosition(&MX, &MY);
 			const f32 screenWidth = 1600.0f;
-			const f32 screenHeight = 800.0f;
+			const f32 screenHeight = 900.0f;
 
-			// 스크린 → Normalized Device Coordinate 변환
+			// screen → Normalized Device Coordinate 변환
 			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
 			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
+			//f32 NDCY = (static_cast<f32>(MY) / screenHeight) * 2.0f - 1.0f;
+			std::cout << "MouseCoord : " << NDCY * 400 <<" RightActorCoord : " << RightActor.posY<< std::endl;
+			//if (RightActor.posY < NDCY * 400)
+			//{
+			//	if (NDCY * 400 - RightActor.posY < 10.0f)
+			//	{
+			//		RightActor.posY -= NDCY * 400 - RightActor.posY;
+			//	}
+			//	else
+			//	{
+			//		RightActor.posY -= 10.f;
+			//	}
+			//}
+			//else if (RightActor.posY > NDCY * 400)
+			//{
+			//	if (RightActor.posY - NDCY * 400 < 10.0f)
+			//	{
+			//		RightActor.posY += RightActor.posY - NDCY * 400;
+			//	}
+			//	else
+			//	{
+			//		RightActor.posY += 10.f;
+			//	}
+			//}
 			RightActor.posY = NDCY *400;
+			if (RightActor.posY < -450 + RightActor.sizeY / 2)//clamp
+			{
+				RightActor.posY = -450 + RightActor.sizeY / 2;
+			}
+			else if (RightActor.posY > 450 - RightActor.sizeY / 2)
+			{
+				RightActor.posY = 450 - RightActor.sizeY / 2;
+			}
 
 			if (AEInputCheckCurr(AEVK_W))
 			{
-				LeftActor.posY += 5.0f;
+				LeftActor.posY += 20.0f;
 			}
 			else if (AEInputCheckCurr(AEVK_S))
 			{
-				LeftActor.posY -= 5.0f;
+				LeftActor.posY -= 20.0f;
 			}
+			if (LeftActor.posY < -450 + LeftActor.sizeY / 2)//clamp
+			{
+				LeftActor.posY = -450 + LeftActor.sizeY / 2;
+			}
+			else if (LeftActor.posY > 450 - LeftActor.sizeY / 2)
+			{
+				LeftActor.posY = 450 - LeftActor.sizeY / 2;
+			}
+
 /*----------------Restart----------------*/
 			if (AEInputCheckTriggered(AEVK_R))
 			{
@@ -197,12 +281,12 @@ namespace ponggame
 //remove later
 			ResolveBallBoxCollision(Ball, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY);
 			ResolveBallBoxCollision(Ball, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY);
-			DrawSprite(LeftActor.Mesh, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY, 0.f);
-			DrawSprite(RightActor.Mesh, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY, 0.f);
+			global::DrawSprite(LeftActor.Mesh, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY, 0.f);
+			global::DrawSprite(RightActor.Mesh, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY, 0.f);
 /*----------------Draw Box----------------*/
 
 /*----------------Draw Random Box----------------*/
-			//DrawSprite(CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
+			//DrawSprite(global::CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
 /*----------------Draw Random Box----------------*/
 
 /*----------------CheckCollision----------------*/
@@ -230,7 +314,7 @@ namespace ponggame
 /*----------------CheckCollision----------------*/
 
 /*----------------Draw Ball----------------*/
-			DrawSprite(Ball.Mesh, Ball.posX, Ball.posY, 100.f, 100.f, 0.f);
+			global::DrawSprite(Ball.Mesh, Ball.posX, Ball.posY, 100.f, 100.f, 0.f);
 /*----------------Draw Ball----------------*/
 			
 /*----------------Draw Time----------------*/
@@ -283,4 +367,5 @@ namespace ponggame
 			GameState.bShouldResetGame = true;
 		}
 	}
+
 }

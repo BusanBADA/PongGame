@@ -1,7 +1,11 @@
 #include "AEEngine.h"
 #include "Ball.h"
+#include <string>
+#include "GlobalFunc.h"
 namespace ponggame
 {
+	
+
 	class Actor
 	{
 	public:
@@ -27,6 +31,8 @@ namespace ponggame
 		FBall Ball;
 		bool bIsRKeyPressed = false;
 		f32 DeltaTime = 0.f;
+		void DrawSplashScreen();
+		void DrawMainMenu();
 		void ResetGame();
 		void Update();
 		void EndGame();
@@ -36,10 +42,13 @@ namespace ponggame
 	{
 	public:
 		bool bIsPreGameState = true;
+		f32 PreGameTimer = 0.f;
+		bool bIsMainMenu = false;
 		bool bShouldResetGame = false;
 		bool bIsGameRunning = false;
 		bool bIsGameEnded = false;
 	};
+
 
 	extern FGame Game;
 	extern FGameState GameState;
@@ -84,4 +93,26 @@ R 누르면 게임 재 시작.													<-- 완료
 먼저 11점을 획득하는 플레이어가 승리									<-- 완료
 
 승리 화면에서 R누르면 재시작.											<-- 완료	
+
+프로그램 시작 시 로고 Fade In/Out										<-- 완료
+
+로고 재생이 끝나면 메인 메뉴로 이동함.									<-- 완료
+
+메인 메뉴 화면에 버튼 두 개 있음. (Button A, Button B)					<-- 완료
+
+Button A는 Pong 게임 실행하는 버튼.										
+
+Button B는 Animation Test Level 실행하는 버튼임.
+
+Animation Test Level에서는 캐릭터 애니메이션을 구현 할 거임. 자세한 스펙은 아래 참조.
+
+Note: 로고 재생 화면, 메인 메뉴, 퐁 게임, Animation Test Level에 대해서 각 별도의 .cpp/.h 파일 만들기
+
+로고 재생 화면															<-- 완료
+
+메인 메뉴																<-- 완료
+
+퐁 게임																	<-- 완료
+
+Animation Test Level
 */

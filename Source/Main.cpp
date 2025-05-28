@@ -2,6 +2,8 @@
 #include <crtdbg.h> // To check for memory leaks
 #include "AEEngine.h"
 #include "PongGame.h"
+#include "Logo.h"
+#include "MainMenu.h"
 #include <iostream>
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -22,9 +24,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     // Changing the window title
     AESysSetWindowTitle("PongGame");
-	s8 font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
+	global::font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
 
-
+	mainmenu::MainMenu.Init();
+	logo::Logo.Init();
 	f64 lastTime = AEGetTime(nullptr);
 	while (AESysDoesWindowExist())
 	{
@@ -35,23 +38,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 		if (ponggame::GameState.bIsPreGameState)
 		{
-			AESysFrameStart();
-			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
-			AEGfxPrint(font, "Press Any Key To Start", -0.5f, 0.4f, 1.f, 1, 1, 1, 1);
-			for (u8 key = 0x01; key <= 0xFE; ++key)
-			{
-				if (key == 0x15 || key == 0x19)
-				{
-					continue;
-				}
-				if (AEInputCheckTriggered(key))
-				{
-					ponggame::GameState.bIsPreGameState = false;
-					ponggame::GameState.bShouldResetGame = true;
-					break;
-				}
-			}
-			AESysFrameEnd();
+			ponggame::Game.DrawSplashScreen();
+		}
+		if (ponggame::GameState.bIsMainMenu)
+		{
+			ponggame::Game.DrawMainMenu();
 		}
 		if (ponggame::GameState.bShouldResetGame)
 		{
@@ -78,6 +69,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	{
 		AEGfxMeshFree(ponggame::Game.Ball.Mesh);
 	}
+	mainmenu::MainMenu.Free();
 	AESysExit();
 	return 0;
 }
