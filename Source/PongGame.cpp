@@ -92,9 +92,7 @@ namespace ponggame
 		}
 
 		RightActor.score = 0;
-		global::GameState.bIsGameEnded = false;
-		global::GameState.bIsGameRunning = true;
-		global::GameState.bShouldResetGame = false;
+		global::GameState.GameStateEnum = global::EGameStateEnum::PONG_GAME;
 	}
 	
 	void FGame::Update()
@@ -194,8 +192,7 @@ namespace ponggame
 				RightActor.score++;
 				if (RightActor.score > 10)
 				{
-					global::GameState.bIsGameRunning = false;
-					global::GameState.bIsGameEnded = true;
+					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
 				}
 			}
 			if (bIsHitRight)
@@ -203,8 +200,7 @@ namespace ponggame
 				LeftActor.score++;
 				if (LeftActor.score > 10)
 				{
-					global::GameState.bIsGameRunning = false;
-					global::GameState.bIsGameEnded = true;
+					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
 				}
 			}
 /*----------------CheckCollision----------------*/
@@ -228,7 +224,7 @@ namespace ponggame
 		}
 		else if (bIsRKeyPressed)
 		{
-			global::GameState.bShouldResetGame = true;
+			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
 		}
 	}
 
@@ -240,8 +236,7 @@ namespace ponggame
 			EndGameTimer += global::GameState.DeltaTime;
 			if (EndGameTimer > 3.f)
 			{
-				global::GameState.bIsMainMenu = true;
-				global::GameState.bIsGameEnded = false;
+				global::GameState.GameStateEnum = global::EGameStateEnum::MAIN_MENU;
 				EndGameTimer = 0.f;
 			}
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
@@ -267,7 +262,7 @@ namespace ponggame
 		}
 		if (bIsRKeyPressed)
 		{
-			global::GameState.bShouldResetGame = true;
+			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
 		}
 	}
 

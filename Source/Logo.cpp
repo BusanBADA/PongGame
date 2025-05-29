@@ -72,8 +72,7 @@ namespace logo
 		}
 		else
 		{
-			global::GameState.bIsPreGameState = false;
-			global::GameState.bIsMainMenu = true;
+			global::GameState.GameStateEnum = global::EGameStateEnum::MAIN_MENU;
 		}
 
 		for (u8 key = 0x01; key <= 0xFE; ++key)
@@ -84,8 +83,7 @@ namespace logo
 			}
 			if (AEInputCheckTriggered(key))
 			{
-				global::GameState.bIsPreGameState = false;
-				global::GameState.bIsMainMenu = true;
+				global::GameState.GameStateEnum = global::EGameStateEnum::MAIN_MENU;
 				break;
 			}
 		}

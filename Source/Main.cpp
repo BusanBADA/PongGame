@@ -38,27 +38,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		lastTime = currentTime;
 //		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
 
-		if (global::GameState.bIsPreGameState)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::SPLASH)
 		{
 			logo::Logo.Draw();
 		}
-		if (global::GameState.bIsMainMenu)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::MAIN_MENU)
 		{
 			mainmenu::MainMenu.Draw();
 		}
-		if (global::GameState.bIsAnimation)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::ANIMATION)
 		{
 			animation::Animation.Draw();
 		}
-		if (global::GameState.bShouldResetGame)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_RESET)
 		{
 			ponggame::Game.ResetGame();
 		}
-		if (global::GameState.bIsGameRunning)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_GAME)
 		{
 			ponggame::Game.Update();
 		}
-		if (global::GameState.bIsGameEnded)
+		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_END)
 		{
 			ponggame::Game.EndGame();
 		}

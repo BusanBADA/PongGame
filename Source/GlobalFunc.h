@@ -6,17 +6,23 @@ namespace global
 	AEGfxVertexList* CreateBoxMesh(u32 color = 0xFFFFFFFF);
 	void DrawSprite(AEGfxVertexList* mesh, float posX, float posY, float scaleX, float scaleY, float rotation);
 
+	enum EGameStateEnum
+	{
+		SPLASH,
+		MAIN_MENU,
+		ANIMATION,
+		PONG_GAME,
+		PONG_END,
+		PONG_RESET//TODO : remove later
+	};
+
 	class FGameState
 	{
 	public:
-		bool bIsPreGameState = true;
+		EGameStateEnum GameStateEnum = EGameStateEnum::SPLASH;
+
 		f32 PreGameTimer = 0.f;
 		f32 DeltaTime = 0.f;
-		bool bIsMainMenu = false;
-		bool bIsAnimation = false;
-		bool bShouldResetGame = false;
-		bool bIsGameRunning = false;
-		bool bIsGameEnded = false;
 	};
 
 	class FButton
