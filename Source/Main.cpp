@@ -76,6 +76,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		AEGfxMeshFree(ponggame::Game.Ball.Mesh);
 	}
 	mainmenu::MainMenu.Free();
+	animation::Animation.Free();
 	AESysExit();
 	return 0;
 }

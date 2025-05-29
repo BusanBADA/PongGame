@@ -23,9 +23,6 @@ namespace ponggame
 	}
 
 	
-
-	
-
 	void ResolveBallBoxCollision(ponggame::FBall& ball, float boxX, float boxY, float boxW, float boxH)
 	{
 		// 1. 박스의 가장 가까운 점 계산 (클램핑)
@@ -56,7 +53,6 @@ namespace ponggame
 			}
 		}
 	}
-
 
 
 	void FGame::ResetGame()
