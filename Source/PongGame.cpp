@@ -107,42 +107,36 @@ namespace ponggame
 		{
 			AESysFrameStart();
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
-
+			
 			s32 MX;
 			s32 MY;
 			AEInputGetCursorPosition(&MX, &MY);
 			const f32 screenWidth = 1600.0f;
 			const f32 screenHeight = 900.0f;
 
-			// screen ¡æ Normalized Device Coordinate º¯È¯
 			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
 			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
-			//f32 NDCY = (static_cast<f32>(MY) / screenHeight) * 2.0f - 1.0f;
-//			std::cout << "MouseCoord : " << NDCY * 400 <<" RightActorCoord : " << RightActor.posY<< std::endl;
-			//if (RightActor.posY < NDCY * 400)
-			//{
-			//	if (NDCY * 400 - RightActor.posY < 10.0f)
-			//	{
-			//		RightActor.posY -= NDCY * 400 - RightActor.posY;
-			//	}
-			//	else
-			//	{
-			//		RightActor.posY -= 10.f;
-			//	}
-			//}
-			//else if (RightActor.posY > NDCY * 400)
-			//{
-			//	if (RightActor.posY - NDCY * 400 < 10.0f)
-			//	{
-			//		RightActor.posY += RightActor.posY - NDCY * 400;
-			//	}
-			//	else
-			//	{
-			//		RightActor.posY += 10.f;
-			//	}
-			//}
-			RightActor.posY = NDCY *400;
-			if (RightActor.posY < -450 + RightActor.sizeY / 2)//clamp
+			
+			f32 TargetY = NDCY * 400.0f;
+
+			const f32 moveSpeed = 5.0f; 
+
+			f32 deltaY = TargetY - RightActor.posY;
+
+			if (fabs(deltaY) > 1.0f)
+			{
+				f32 direction = (deltaY > 0.0f) ? 1.0f : -1.0f;
+
+				RightActor.posY += direction * moveSpeed;
+
+				if ((direction > 0.0f && RightActor.posY > TargetY) ||
+					(direction < 0.0f && RightActor.posY < TargetY))
+				{
+					RightActor.posY = TargetY;
+				}
+			}
+
+			if (RightActor.posY < -450 + RightActor.sizeY / 2)
 			{
 				RightActor.posY = -450 + RightActor.sizeY / 2;
 			}
@@ -150,14 +144,14 @@ namespace ponggame
 			{
 				RightActor.posY = 450 - RightActor.sizeY / 2;
 			}
-
+				
 			if (AEInputCheckCurr(AEVK_W))
 			{
-				LeftActor.posY += 20.0f;
+				LeftActor.posY += moveSpeed;
 			}
 			else if (AEInputCheckCurr(AEVK_S))
 			{
-				LeftActor.posY -= 20.0f;
+				LeftActor.posY -= moveSpeed;
 			}
 			if (LeftActor.posY < -450 + LeftActor.sizeY / 2)//clamp
 			{
