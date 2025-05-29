@@ -3,6 +3,7 @@
 namespace global
 {
 	s8 font;
+	FGameState GameState;
 
 	AEGfxVertexList* CreateBoxMesh(u32 color)
 	{
@@ -61,5 +62,25 @@ namespace global
 		f32 ButtonTextW, ButtonTextH;
 		AEGfxGetPrintSize(font, Text.c_str(), 1.f, &ButtonTextW, &ButtonTextH);
 		AEGfxPrint(font, Text.c_str(), posX - (ButtonTextW / 2), posY - (ButtonTextH / 2), 1.f, 0, 0, 0, 1);
+	}
+	bool FButton::CheckButtonCollision()
+	{
+		const f32 screenWidth = 1600.0f;
+		const f32 screenHeight = 900.0f;
+		s32 MX;
+		s32 MY;
+		AEInputGetCursorPosition(&MX, &MY);
+		f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
+		f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f;
+		f32 MousePosX = NDCX * 800;
+		f32 MousePosY = NDCY * 450;
+		if ((screenWidth/2) * posX - (sizeX / 2) <= NDCX * 800 && (screenWidth / 2) * posX + (sizeX / 2) >= NDCX * 800 && (screenHeight / 2) * posY - (sizeY / 2) <= NDCY * 450 && (screenHeight / 2) * posY + (sizeY / 2) >= NDCY * 450)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "PongGame.h"
 #include "Logo.h"
 #include "MainMenu.h"
+#include "Animation.h"
 #include <iostream>
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -28,31 +29,36 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 	mainmenu::MainMenu.Init();
 	logo::Logo.Init();
+	animation::Animation.Init();
 	f64 lastTime = AEGetTime(nullptr);
 	while (AESysDoesWindowExist())
 	{
 		f64 currentTime = AEGetTime(nullptr);
-		ponggame::Game.DeltaTime = currentTime - lastTime;
+		global::GameState.DeltaTime = currentTime - lastTime;
 		lastTime = currentTime;
-		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
+//		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
 
-		if (ponggame::GameState.bIsPreGameState)
+		if (global::GameState.bIsPreGameState)
 		{
-			ponggame::Game.DrawSplashScreen();
+			logo::Logo.Draw();
 		}
-		if (ponggame::GameState.bIsMainMenu)
+		if (global::GameState.bIsMainMenu)
 		{
-			ponggame::Game.DrawMainMenu();
+			mainmenu::MainMenu.Draw();
 		}
-		if (ponggame::GameState.bShouldResetGame)
+		if (global::GameState.bIsAnimation)
+		{
+			animation::Animation.Draw();
+		}
+		if (global::GameState.bShouldResetGame)
 		{
 			ponggame::Game.ResetGame();
 		}
-		if (ponggame::GameState.bIsGameRunning)
+		if (global::GameState.bIsGameRunning)
 		{
 			ponggame::Game.Update();
 		}
-		if (ponggame::GameState.bIsGameEnded)
+		if (global::GameState.bIsGameEnded)
 		{
 			ponggame::Game.EndGame();
 		}

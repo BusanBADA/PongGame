@@ -33,6 +33,9 @@
     <ClCompile Include="..\Source\MainMenu.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Animation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\PongGame.h">
@@ -48,6 +51,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\MainMenu.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Animation.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

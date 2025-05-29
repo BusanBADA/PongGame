@@ -4,8 +4,6 @@
 #include "GlobalFunc.h"
 namespace ponggame
 {
-	
-
 	class Actor
 	{
 	public:
@@ -17,41 +15,22 @@ namespace ponggame
 		int score = 0;
 	};
 	
-	
-	
 	class FGame
 	{
 	public:
-		bool bFontLoadFlag = false;
-		s8 font;
 		f64 Time = 0.f;
 		f64 StartTime = 0.f;
 		Actor LeftActor;
 		Actor RightActor;
 		FBall Ball;
 		bool bIsRKeyPressed = false;
-		f32 DeltaTime = 0.f;
-		void DrawSplashScreen();
-		void DrawMainMenu();
+		f32 EndGameTimer = 0.f;
 		void ResetGame();
 		void Update();
 		void EndGame();
 	};
 
-	class FGameState
-	{
-	public:
-		bool bIsPreGameState = true;
-		f32 PreGameTimer = 0.f;
-		bool bIsMainMenu = false;
-		bool bShouldResetGame = false;
-		bool bIsGameRunning = false;
-		bool bIsGameEnded = false;
-	};
-
-
 	extern FGame Game;
-	extern FGameState GameState;
 	
 }
 
@@ -100,9 +79,9 @@ R 누르면 게임 재 시작.													<-- 완료
 
 메인 메뉴 화면에 버튼 두 개 있음. (Button A, Button B)					<-- 완료
 
-Button A는 Pong 게임 실행하는 버튼.										
+Button A는 Pong 게임 실행하는 버튼.										<-- 완료
 
-Button B는 Animation Test Level 실행하는 버튼임.
+Button B는 Animation Test Level 실행하는 버튼임.						
 
 Animation Test Level에서는 캐릭터 애니메이션을 구현 할 거임. 자세한 스펙은 아래 참조.
 
@@ -114,5 +93,5 @@ Note: 로고 재생 화면, 메인 메뉴, 퐁 게임, Animation Test Level에 대해서 각 별도�
 
 퐁 게임																	<-- 완료
 
-Animation Test Level
+Animation Test Level													<-- 완료
 */

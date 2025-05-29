@@ -7,6 +7,7 @@ namespace mainmenu
 	{
 	public:
 		void Init();
+		void Draw();
 		void Free();
 
 		global::FButton* ButtonA = nullptr;

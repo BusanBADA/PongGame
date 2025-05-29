@@ -7,6 +7,7 @@ namespace logo
 	{
 	public:
 		void Init();
+		void Draw();
 		AEGfxTexture* Image = nullptr;
 		AEGfxVertexList* Mesh = nullptr;
 	};
