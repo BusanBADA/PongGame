@@ -35,7 +35,7 @@ namespace mainmenu
 		AESysFrameEnd();
 	}
 
-	void FMainMenu::Free()
+	void FMainMenu::Exit()
 	{
 		if (ButtonA != nullptr)
 		{

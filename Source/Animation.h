@@ -1,15 +1,16 @@
 #pragma once
 #include "AEEngine.h"
+#include "RenderableState.h"
 namespace animation
 {
 	
-	class FAnimation
+	class FAnimation : public renderablestate::FRenderableState
 	{
 	public:
-		void Init();
-		void Draw();
+		virtual void Init() override;
+		virtual void Draw() override;
 		void Reset();
-		void Free();
+		virtual void Exit() override;
 
 		f32 posX = 0.f;
 		f32 posY = 0.f;
@@ -19,9 +20,9 @@ namespace animation
 		const u8 MaxIndex = 8;
 		const f32 sprite_uv_width = 1.f / 8.f;
 
-		f32 RespawnTimer = 0.f;
-		f32 AnimationFrameTimer = 0.f;
-		const f32 AnmationFrameLimit = 0.2f;
+		f64 RespawnTimer = 0.f;
+		f64 AnimationFrameTimer = 0.f;
+		const f64 AnmationFrameLimit = 0.2f;
 
 		AEGfxVertexList* Mesh = nullptr;
 		AEGfxTexture* IdelImage = nullptr;

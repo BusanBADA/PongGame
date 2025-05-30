@@ -1,7 +1,7 @@
 #include "AEEngine.h"
 #include "Ball.h"
 #include <string>
-#include "GlobalFunc.h"
+#include "RenderableState.h"
 namespace ponggame
 {
 	class Actor
@@ -15,7 +15,7 @@ namespace ponggame
 		int score = 0;
 	};
 	
-	class FGame
+	class FGame : public renderablestate::FRenderableState
 	{
 	public:
 		f64 Time = 0.f;
@@ -25,8 +25,10 @@ namespace ponggame
 		FBall Ball;
 		bool bIsRKeyPressed = false;
 		f32 EndGameTimer = 0.f;
+		virtual void Init() override;
+		virtual void Draw() override;
+		virtual void Exit() override;
 		void ResetGame();
-		void Update();
 		void EndGame();
 	};
 
@@ -61,7 +63,7 @@ R 누르면 게임 재 시작.													<-- 완료
 
 좌측 중앙 화면 1/3 지점는 플레이어A 오브젝트 시작 좌표.					<-- 완료
 
-플레이어A 오브젝트의 Y좌표는 마우스를 따라 움직임.						<--  
+플레이어A 오브젝트의 Y좌표는 마우스를 따라 움직임.						<-- 완료
 
 우측 중앙 화면 1/3 지점은 플레이어B 오브젝트 시작 좌표.					<-- 완료
 

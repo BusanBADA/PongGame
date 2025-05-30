@@ -162,7 +162,7 @@ namespace animation
         bIsWalking = false;
         CurrentImage = IdelImage;
     }
-    void FAnimation::Free()
+    void FAnimation::Exit()
     {
         if (Mesh!=nullptr)
         {

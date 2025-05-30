@@ -90,4 +90,8 @@ namespace logo
 		AESysFrameEnd();
 	}
 
+	void FLogo::Exit()
+	{
+	}
+
 }

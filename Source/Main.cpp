@@ -14,8 +14,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-
-
     int gGameRunning = 1;
 
     // Initialization of your own variables go here
@@ -38,45 +36,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		lastTime = currentTime;
 //		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
 
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::SPLASH)
+		switch (global::GameState.GameStateEnum)
 		{
+		case global::EGameStateEnum::SPLASH :
 			logo::Logo.Draw();
-		}
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::MAIN_MENU)
-		{
+			break;
+		case global::EGameStateEnum::MAIN_MENU:
 			mainmenu::MainMenu.Draw();
-		}
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::ANIMATION)
-		{
+			break;
+		case global::EGameStateEnum::ANIMATION:
 			animation::Animation.Draw();
-		}
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_RESET)
-		{
+			break;
+		case global::EGameStateEnum::PONG_RESET:
 			ponggame::Game.ResetGame();
-		}
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_GAME)
-		{
-			ponggame::Game.Update();
-		}
-		if (global::GameState.GameStateEnum == global::EGameStateEnum::PONG_END)
-		{
+			break;
+		case global::EGameStateEnum::PONG_GAME:
+			ponggame::Game.Draw();
+			break;
+		case global::EGameStateEnum::PONG_END:
 			ponggame::Game.EndGame();
+			break;
 		}
 	}
-	if (ponggame::Game.LeftActor.Mesh != nullptr)
-	{
-		AEGfxMeshFree(ponggame::Game.LeftActor.Mesh);
-	}
-	if (ponggame::Game.RightActor.Mesh != nullptr)
-	{
-		AEGfxMeshFree(ponggame::Game.RightActor.Mesh);
-	}
-	if (ponggame::Game.Ball.Mesh != nullptr)
-	{
-		AEGfxMeshFree(ponggame::Game.Ball.Mesh);
-	}
-	mainmenu::MainMenu.Free();
-	animation::Animation.Free();
+	ponggame::Game.Exit();
+	mainmenu::MainMenu.Exit();
+	animation::Animation.Exit();
 	AESysExit();
 	return 0;
 }

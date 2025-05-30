@@ -56,5 +56,8 @@
     <ClInclude Include="..\Source\Animation.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\RenderableState.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

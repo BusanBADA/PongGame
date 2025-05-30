@@ -1,13 +1,14 @@
 #pragma once
 #include "AEEngine.h"
-
+#include "RenderableState.h"
 namespace logo
 {
-	class FLogo
+	class FLogo : public renderablestate::FRenderableState
 	{
 	public:
-		void Init();
-		void Draw();
+		virtual void Init() override;
+		virtual void Draw() override;
+		virtual void Exit() override;
 		AEGfxTexture* Image = nullptr;
 		AEGfxVertexList* Mesh = nullptr;
 	};

@@ -55,6 +55,159 @@ namespace ponggame
 	}
 
 
+	void FGame::Init()
+	{
+	}
+
+	void FGame::Draw()
+	{
+		if (!bIsRKeyPressed && AESysDoesWindowExist())
+		{
+			AESysFrameStart();
+			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
+
+			s32 MX;
+			s32 MY;
+			AEInputGetCursorPosition(&MX, &MY);
+			const f32 screenWidth = 1600.0f;
+			const f32 screenHeight = 900.0f;
+
+			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
+			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
+
+			f32 TargetY = NDCY * 400.0f;
+
+			const f32 moveSpeed = 5.0f;
+
+			f32 deltaY = TargetY - RightActor.posY;
+
+			if (fabs(deltaY) > 1.0f)
+			{
+				f32 direction = (deltaY > 0.0f) ? 1.0f : -1.0f;
+
+				RightActor.posY += direction * moveSpeed;
+
+				if ((direction > 0.0f && RightActor.posY > TargetY) ||
+					(direction < 0.0f && RightActor.posY < TargetY))
+				{
+					RightActor.posY = TargetY;
+				}
+			}
+
+			if (RightActor.posY < -450 + RightActor.sizeY / 2)
+			{
+				RightActor.posY = -450 + RightActor.sizeY / 2;
+			}
+			else if (RightActor.posY > 450 - RightActor.sizeY / 2)
+			{
+				RightActor.posY = 450 - RightActor.sizeY / 2;
+			}
+
+			if (AEInputCheckCurr(AEVK_W))
+			{
+				LeftActor.posY += moveSpeed;
+			}
+			else if (AEInputCheckCurr(AEVK_S))
+			{
+				LeftActor.posY -= moveSpeed;
+			}
+			if (LeftActor.posY < -450 + LeftActor.sizeY / 2)//clamp
+			{
+				LeftActor.posY = -450 + LeftActor.sizeY / 2;
+			}
+			else if (LeftActor.posY > 450 - LeftActor.sizeY / 2)
+			{
+				LeftActor.posY = 450 - LeftActor.sizeY / 2;
+			}
+
+			/*----------------Restart----------------*/
+			if (AEInputCheckTriggered(AEVK_R))
+			{
+				bIsRKeyPressed = true;
+			}
+			/*----------------Restart----------------*/
+
+
+			/*----------------Draw Time----------------*/
+			std::string Time = FormatTime(AEGetTime(nullptr) - StartTime);
+			f32 TimeW, TimeH;
+			AEGfxGetPrintSize(global::font, Time.c_str(), 1.f, &TimeW, &TimeH);
+			AEGfxPrint(global::font, Time.c_str(), -TimeW / 2, 0.7f, 1.f, 1, 1, 1, 1);
+			/*----------------Draw Time----------------*/
+
+			/*----------------Draw Box----------------*/
+			//remove later
+			ResolveBallBoxCollision(Ball, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY);
+			ResolveBallBoxCollision(Ball, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY);
+			global::DrawSprite(LeftActor.Mesh, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY, 0.f);
+			global::DrawSprite(RightActor.Mesh, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY, 0.f);
+			/*----------------Draw Box----------------*/
+
+			/*----------------Draw Random Box----------------*/
+						//DrawSprite(global::CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
+			/*----------------Draw Random Box----------------*/
+
+			/*----------------CheckCollision----------------*/
+			bool bIsHitLeft = false;
+			bool bIsHitRight = false;
+			Ball.UpdatePosition(global::GameState.DeltaTime, bIsHitLeft, bIsHitRight);
+			if (bIsHitLeft)
+			{
+				RightActor.score++;
+				if (RightActor.score > 10)
+				{
+					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
+				}
+			}
+			if (bIsHitRight)
+			{
+				LeftActor.score++;
+				if (LeftActor.score > 10)
+				{
+					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
+				}
+			}
+			/*----------------CheckCollision----------------*/
+
+			/*----------------Draw Ball----------------*/
+			global::DrawSprite(Ball.Mesh, Ball.posX, Ball.posY, 100.f, 100.f, 0.f);
+			/*----------------Draw Ball----------------*/
+
+			/*----------------Draw Time----------------*/
+			std::string LeftScore = std::to_string(LeftActor.score);
+			f32 LeftScoreW, LeftScoreH;
+			AEGfxGetPrintSize(global::font, LeftScore.c_str(), 1.f, &LeftScoreW, &LeftScoreH);
+			AEGfxPrint(global::font, LeftScore.c_str(), -LeftScoreW / 2 - 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
+			std::string RightScore = std::to_string(RightActor.score);
+			f32 RightScoreW, RightScoreH;
+			AEGfxGetPrintSize(global::font, RightScore.c_str(), 1.f, &RightScoreW, &RightScoreH);
+			AEGfxPrint(global::font, RightScore.c_str(), -RightScoreW / 2 + 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
+			/*----------------Draw Time----------------*/
+
+			AESysFrameEnd();
+		}
+		else if (bIsRKeyPressed)
+		{
+			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
+		}
+	}
+
+	void FGame::Exit()
+	{
+		if (ponggame::Game.LeftActor.Mesh != nullptr)
+		{
+			AEGfxMeshFree(ponggame::Game.LeftActor.Mesh);
+		}
+		if (ponggame::Game.RightActor.Mesh != nullptr)
+		{
+			AEGfxMeshFree(ponggame::Game.RightActor.Mesh);
+		}
+		if (ponggame::Game.Ball.Mesh != nullptr)
+		{
+			AEGfxMeshFree(ponggame::Game.Ball.Mesh);
+		}
+	}
+
 	void FGame::ResetGame()
 	{
 		srand(static_cast<unsigned int>(time(nullptr)));
@@ -93,139 +246,6 @@ namespace ponggame
 
 		RightActor.score = 0;
 		global::GameState.GameStateEnum = global::EGameStateEnum::PONG_GAME;
-	}
-	
-	void FGame::Update()
-	{
-		if (!bIsRKeyPressed && AESysDoesWindowExist())
-		{
-			AESysFrameStart();
-			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
-			
-			s32 MX;
-			s32 MY;
-			AEInputGetCursorPosition(&MX, &MY);
-			const f32 screenWidth = 1600.0f;
-			const f32 screenHeight = 900.0f;
-
-			f32 NDCX = (static_cast<f32>(MX) / screenWidth) * 2.0f - 1.0f;
-			f32 NDCY = 1.0f - (static_cast<f32>(MY) / screenHeight) * 2.0f; // y inverse
-			
-			f32 TargetY = NDCY * 400.0f;
-
-			const f32 moveSpeed = 5.0f; 
-
-			f32 deltaY = TargetY - RightActor.posY;
-
-			if (fabs(deltaY) > 1.0f)
-			{
-				f32 direction = (deltaY > 0.0f) ? 1.0f : -1.0f;
-
-				RightActor.posY += direction * moveSpeed;
-
-				if ((direction > 0.0f && RightActor.posY > TargetY) ||
-					(direction < 0.0f && RightActor.posY < TargetY))
-				{
-					RightActor.posY = TargetY;
-				}
-			}
-
-			if (RightActor.posY < -450 + RightActor.sizeY / 2)
-			{
-				RightActor.posY = -450 + RightActor.sizeY / 2;
-			}
-			else if (RightActor.posY > 450 - RightActor.sizeY / 2)
-			{
-				RightActor.posY = 450 - RightActor.sizeY / 2;
-			}
-				
-			if (AEInputCheckCurr(AEVK_W))
-			{
-				LeftActor.posY += moveSpeed;
-			}
-			else if (AEInputCheckCurr(AEVK_S))
-			{
-				LeftActor.posY -= moveSpeed;
-			}
-			if (LeftActor.posY < -450 + LeftActor.sizeY / 2)//clamp
-			{
-				LeftActor.posY = -450 + LeftActor.sizeY / 2;
-			}
-			else if (LeftActor.posY > 450 - LeftActor.sizeY / 2)
-			{
-				LeftActor.posY = 450 - LeftActor.sizeY / 2;
-			}
-
-/*----------------Restart----------------*/
-			if (AEInputCheckTriggered(AEVK_R))
-			{
-				bIsRKeyPressed = true;
-			}
-/*----------------Restart----------------*/
-
-
-/*----------------Draw Time----------------*/
-			std::string Time = FormatTime(AEGetTime(nullptr) - StartTime);
-			f32 TimeW, TimeH;
-			AEGfxGetPrintSize(global::font, Time.c_str(), 1.f, &TimeW, &TimeH);
-			AEGfxPrint(global::font, Time.c_str(), -TimeW/2, 0.7f, 1.f, 1, 1, 1, 1);
-/*----------------Draw Time----------------*/
-
-/*----------------Draw Box----------------*/
-//remove later
-			ResolveBallBoxCollision(Ball, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY);
-			ResolveBallBoxCollision(Ball, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY);
-			global::DrawSprite(LeftActor.Mesh, LeftActor.posX, LeftActor.posY, LeftActor.sizeX, LeftActor.sizeY, 0.f);
-			global::DrawSprite(RightActor.Mesh, RightActor.posX, RightActor.posY, RightActor.sizeX, RightActor.sizeY, 0.f);
-/*----------------Draw Box----------------*/
-
-/*----------------Draw Random Box----------------*/
-			//DrawSprite(global::CreateBoxMesh(), 200.f, 150.f, 100.f, 100.f, 0.f);
-/*----------------Draw Random Box----------------*/
-
-/*----------------CheckCollision----------------*/
-			bool bIsHitLeft = false;
-			bool bIsHitRight = false;
-			Ball.UpdatePosition(global::GameState.DeltaTime, bIsHitLeft, bIsHitRight);
-			if (bIsHitLeft)
-			{
-				RightActor.score++;
-				if (RightActor.score > 10)
-				{
-					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
-				}
-			}
-			if (bIsHitRight)
-			{
-				LeftActor.score++;
-				if (LeftActor.score > 10)
-				{
-					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
-				}
-			}
-/*----------------CheckCollision----------------*/
-
-/*----------------Draw Ball----------------*/
-			global::DrawSprite(Ball.Mesh, Ball.posX, Ball.posY, 100.f, 100.f, 0.f);
-/*----------------Draw Ball----------------*/
-			
-/*----------------Draw Time----------------*/
-			std::string LeftScore = std::to_string(LeftActor.score);
-			f32 LeftScoreW, LeftScoreH;
-			AEGfxGetPrintSize(global::font, LeftScore.c_str(), 1.f, &LeftScoreW, &LeftScoreH);
-			AEGfxPrint(global::font, LeftScore.c_str(), -LeftScoreW / 2 - 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
-			std::string RightScore = std::to_string(RightActor.score);
-			f32 RightScoreW, RightScoreH;
-			AEGfxGetPrintSize(global::font, RightScore.c_str(), 1.f, &RightScoreW, &RightScoreH);
-			AEGfxPrint(global::font, RightScore.c_str(), -RightScoreW / 2 + 0.5f, 0.7f, 1.f, 1, 1, 1, 1);
-/*----------------Draw Time----------------*/
-
-			AESysFrameEnd();
-		}
-		else if (bIsRKeyPressed)
-		{
-			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
-		}
 	}
 
 	void FGame::EndGame()

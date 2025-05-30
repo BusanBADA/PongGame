@@ -21,9 +21,11 @@ namespace global
 	public:
 		EGameStateEnum GameStateEnum = EGameStateEnum::SPLASH;
 
-		f32 PreGameTimer = 0.f;
-		f32 DeltaTime = 0.f;
+		f64 PreGameTimer = 0.f;
+		f64 DeltaTime = 0.f;
 	};
+
+	
 
 	class FButton
 	{

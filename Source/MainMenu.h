@@ -1,14 +1,15 @@
 #pragma once
 #include "AEEngine.h"
 #include "GlobalFunc.h"
+#include "RenderableState.h"
 namespace mainmenu
 {
-	class FMainMenu
+	class FMainMenu : public renderablestate::FRenderableState
 	{
 	public:
-		void Init();
-		void Draw();
-		void Free();
+		virtual void Init() override;
+		virtual void Draw() override;
+		virtual void Exit() override;
 
 		global::FButton* ButtonA = nullptr;
 		global::FButton* ButtonB = nullptr;
