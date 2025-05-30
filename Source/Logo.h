@@ -12,6 +12,4 @@ namespace logo
 		AEGfxTexture* Image = nullptr;
 		AEGfxVertexList* Mesh = nullptr;
 	};
-
-	extern FLogo Logo;
 }

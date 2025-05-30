@@ -3,8 +3,6 @@
 
 namespace animation
 {
-    FAnimation Animation;
-
 	void FAnimation::Init()
 	{
         AEGfxMeshStart();

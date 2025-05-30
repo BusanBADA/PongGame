@@ -3,8 +3,6 @@
 #include "PongGame.h"
 namespace logo
 {
-	FLogo Logo;
-
 	void FLogo::Init()
 	{
 		Image = AEGfxTextureLoad("Assets/Logo.png");
@@ -29,14 +27,14 @@ namespace logo
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxTextureSet(Image, 0, 0);
 			AEGfxSetColorToMultiply(1.0f, 1.0f, 1.0f, global::GameState.PreGameTimer);
 			AEGfxSetColorToAdd(0.0f, 0.0f, 0.0f, 0.0f);
 			AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 			AEGfxSetTransparency(1.0f);
-			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxTextureSet(Image, 0, 0);
 			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(logo::Logo.Mesh, AE_GFX_MDM_TRIANGLES);
+			AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
 			//std::string Title = "PongGame";
 			//f32 TitleW, TitleH;
 			//AEGfxGetPrintSize(font, Title.c_str(), 1.f, &TitleW, &TitleH);
@@ -56,14 +54,14 @@ namespace logo
 			AEMtx33Concat(&transform, &rotate, &scale);
 			AEMtx33Concat(&transform, &translate, &transform);
 			AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxTextureSet(Image, 0, 0);
 			AEGfxSetColorToMultiply(1.0f, 1.0f, 1.0f, 1 - (global::GameState.PreGameTimer - 1));
 			AEGfxSetColorToAdd(0.0f, 0.0f, 0.0f, 0.0f);
 			AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 			AEGfxSetTransparency(1.0f);
-			AEGfxTextureSet(logo::Logo.Image, 0, 0);
+			AEGfxTextureSet(Image, 0, 0);
 			AEGfxSetTransform(transform.m);
-			AEGfxMeshDraw(logo::Logo.Mesh, AE_GFX_MDM_TRIANGLES);
+			AEGfxMeshDraw(Mesh, AE_GFX_MDM_TRIANGLES);
 			//AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
 			//std::string Title = "PongGame";
 			//f32 TitleW, TitleH;
@@ -92,6 +90,11 @@ namespace logo
 
 	void FLogo::Exit()
 	{
+		if (Mesh != nullptr)
+		{
+			delete Mesh;
+			Mesh = nullptr;
+		}
 	}
 
 }

@@ -1,10 +1,7 @@
 
 #include <crtdbg.h> // To check for memory leaks
 #include "AEEngine.h"
-#include "PongGame.h"
-#include "Logo.h"
-#include "MainMenu.h"
-#include "Animation.h"
+#include "GlobalFunc.h"
 #include <iostream>
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)

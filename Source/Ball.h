@@ -1,13 +1,11 @@
+#pragma once
 #include "AEEngine.h"
 
-
-
-namespace ponggame
+namespace ball
 {
 	class FBall
 	{
 	public:
-		FBall();
 
 		AEGfxVertexList* Mesh = nullptr;
 		f32 radius = 50.f;

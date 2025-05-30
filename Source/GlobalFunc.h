@@ -1,6 +1,10 @@
 #pragma once
 #include "AEEngine.h"
 #include "string"
+#include "Logo.h"
+#include "Animation.h"
+#include "MainMenu.h"
+#include "PongGame.h"
 namespace global
 {
 	AEGfxVertexList* CreateBoxMesh(u32 color = 0xFFFFFFFF);
@@ -24,37 +28,16 @@ namespace global
 
 		f64 PreGameTimer = 0.f;
 		f64 DeltaTime = 0.f;
-
+		
 	private:
 		EGameStateEnum GameStateEnum;
+		logo::FLogo Logo;
+		animation::FAnimation Animation;
+		mainmenu::FMainMenu MainMenu;
+		ponggame::FGame Game;
 	};
 
 	
-
-	class FButton
-	{
-	public:
-		FButton(std::string InText, f32 InSizeX = 30.f, f32 InSizeY = 30.f, f32 InPosX = 0.f, f32 InPosY = 0.f)
-		{
-			if (Mesh == nullptr)
-			{
-				Mesh = global::CreateBoxMesh();
-			}
-			Text = InText;
-			sizeX = InSizeX;
-			sizeY = InSizeY;
-			posX = InPosX;
-			posY = InPosY;
-		}
-		AEGfxVertexList* Mesh = nullptr;
-		std::string Text;
-		f32 sizeX = 30.f;
-		f32 sizeY = 30.f;
-		f32 posX = 0.f;
-		f32	posY = 0.f;
-		void DrawButton();
-		bool CheckButtonCollision();
-	};
 
 	extern s8 font;
 	extern FGameState GameState;

@@ -36,6 +36,9 @@
     <ClCompile Include="..\Source\Animation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Button.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\PongGame.h">
@@ -57,6 +60,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\RenderableState.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Button.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include "AEEngine.h"
-#include "GlobalFunc.h"
+#include "Button.h"
 #include "RenderableState.h"
 namespace mainmenu
 {
@@ -11,10 +11,8 @@ namespace mainmenu
 		virtual void Draw() override;
 		virtual void Exit() override;
 
-		global::FButton* ButtonA = nullptr;
-		global::FButton* ButtonB = nullptr;
+		button::FButton* ButtonA = nullptr;
+		button::FButton* ButtonB = nullptr;
 
 	};
-
-	extern FMainMenu MainMenu;
 }

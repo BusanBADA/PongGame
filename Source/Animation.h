@@ -42,8 +42,6 @@ namespace animation
 		bool bIsJumping = false;
 		bool bIsWalking = false;
 	};
-
-	extern FAnimation Animation;
 }
 
 /*

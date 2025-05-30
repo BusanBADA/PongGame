@@ -7,8 +7,6 @@
 #include "MainMenu.h"
 namespace ponggame
 {
-	FGame Game;
-
 	std::string FormatTime(float seconds)
 	{
 		int totalSeconds = static_cast<int>(seconds);
@@ -23,7 +21,7 @@ namespace ponggame
 	}
 
 	
-	void ResolveBallBoxCollision(ponggame::FBall& ball, float boxX, float boxY, float boxW, float boxH)
+	void ResolveBallBoxCollision(ball::FBall& ball, float boxX, float boxY, float boxW, float boxH)
 	{
 		// 1. 박스의 가장 가까운 점 계산 (클램핑)
 		float closestX = std::fmax(boxX - boxW / 2, std::fmin(ball.posX, boxX + boxW / 2));
@@ -230,20 +228,20 @@ namespace ponggame
 
 	void FGame::Exit()
 	{
-		if (ponggame::Game.LeftActor.Mesh != nullptr)
+		if (LeftActor.Mesh != nullptr)
 		{
-			AEGfxMeshFree(ponggame::Game.LeftActor.Mesh);
-			ponggame::Game.LeftActor.Mesh = nullptr;
+			AEGfxMeshFree(LeftActor.Mesh);
+			LeftActor.Mesh = nullptr;
 		}
-		if (ponggame::Game.RightActor.Mesh != nullptr)
+		if (RightActor.Mesh != nullptr)
 		{
-			AEGfxMeshFree(ponggame::Game.RightActor.Mesh);
-			ponggame::Game.RightActor.Mesh = nullptr;
+			AEGfxMeshFree(RightActor.Mesh);
+			RightActor.Mesh = nullptr;
 		}
-		if (ponggame::Game.Ball.Mesh != nullptr)
+		if (Ball.Mesh != nullptr)
 		{
-			AEGfxMeshFree(ponggame::Game.Ball.Mesh);
-			ponggame::Game.Ball.Mesh = nullptr;
+			AEGfxMeshFree(Ball.Mesh);
+			Ball.Mesh = nullptr;
 		}
 	}
 

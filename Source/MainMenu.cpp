@@ -1,13 +1,12 @@
 #include "MainMenu.h"
 #include "GlobalFunc.h"
+#include "Button.h"
 namespace mainmenu
 {
-	FMainMenu MainMenu;
-
 	void FMainMenu::Init()
 	{
-		ButtonA = new global::FButton("ButtonA", 300.f, 50.f, -0.5f, -0.5f);
-		ButtonB = new global::FButton("ButtonB", 300.f, 50.f, 0.5f, -0.5f);
+		ButtonA = new button::FButton("ButtonA", 300.f, 50.f, -0.5f, -0.5f);
+		ButtonB = new button::FButton("ButtonB", 300.f, 50.f, 0.5f, -0.5f);
 	}
 
 	void FMainMenu::Draw()

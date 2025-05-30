@@ -1,3 +1,4 @@
+#pragma once
 #include "AEEngine.h"
 #include "Ball.h"
 #include <string>
@@ -22,17 +23,14 @@ namespace ponggame
 		f64 StartTime = 0.f;
 		Actor LeftActor;
 		Actor RightActor;
-		FBall Ball;
+		ball::FBall Ball;
 		bool bIsRKeyPressed = false;
-		f32 EndGameTimer = 0.f;
+		f64 EndGameTimer = 0.f;
 		virtual void Init() override;
 		virtual void Draw() override;
 		virtual void Exit() override;
 		void EndGame();
 	};
-
-	extern FGame Game;
-	
 }
 
 /* TODO LIST
