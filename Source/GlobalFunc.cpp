@@ -1,5 +1,9 @@
 #include "AEEngine.h"
 #include "GlobalFunc.h"
+#include "PongGame.h"
+#include "Logo.h"
+#include "MainMenu.h"
+#include "Animation.h"
 namespace global
 {
 	s8 font;
@@ -82,5 +86,76 @@ namespace global
 		{
 			return false;
 		}
+	}
+	void FGameState::Draw()
+	{
+		switch (GameStateEnum)
+		{
+		case global::EGameStateEnum::SPLASH:
+			logo::Logo.Draw();
+			break;
+		case global::EGameStateEnum::MAIN_MENU:
+			mainmenu::MainMenu.Draw();
+			break;
+		case global::EGameStateEnum::ANIMATION:
+			animation::Animation.Draw();
+			break;
+		case global::EGameStateEnum::PONG_RESET:
+			ponggame::Game.Init();
+			break;
+		case global::EGameStateEnum::PONG_GAME:
+			ponggame::Game.Draw();
+			break;
+		case global::EGameStateEnum::PONG_END:
+			ponggame::Game.EndGame();
+			break;
+		}
+	}
+	void FGameState::ChangeState(EGameStateEnum InEnum)
+	{
+		switch(GameStateEnum)
+		{
+		case global::EGameStateEnum::SPLASH:
+			logo::Logo.Exit();
+			break;
+		case global::EGameStateEnum::MAIN_MENU:
+			mainmenu::MainMenu.Exit();
+			break;
+		case global::EGameStateEnum::ANIMATION:
+			animation::Animation.Draw();
+			break;
+		case global::EGameStateEnum::PONG_RESET:
+			//ponggame::Game.Exit();
+			break;
+		case global::EGameStateEnum::PONG_GAME:
+			//ponggame::Game.Exit();
+			break;
+		case global::EGameStateEnum::PONG_END:
+			ponggame::Game.Exit();
+			break;
+		}
+		GameStateEnum = InEnum;
+		switch (GameStateEnum)
+		{
+		case global::EGameStateEnum::SPLASH:
+			logo::Logo.Init();
+			break;
+		case global::EGameStateEnum::MAIN_MENU:
+			mainmenu::MainMenu.Init();
+			break;
+		case global::EGameStateEnum::ANIMATION:
+			animation::Animation.Init();
+			break;
+		case global::EGameStateEnum::PONG_RESET:
+			ponggame::Game.Init();
+			break;
+		case global::EGameStateEnum::PONG_GAME:
+			ponggame::Game.Draw();
+			break;
+		case global::EGameStateEnum::PONG_END:
+			ponggame::Game.EndGame();
+			break;
+		}
+		
 	}
 }

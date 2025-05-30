@@ -19,10 +19,14 @@ namespace global
 	class FGameState
 	{
 	public:
-		EGameStateEnum GameStateEnum = EGameStateEnum::SPLASH;
+		void Draw();
+		void ChangeState(EGameStateEnum InEnum);
 
 		f64 PreGameTimer = 0.f;
 		f64 DeltaTime = 0.f;
+
+	private:
+		EGameStateEnum GameStateEnum;
 	};
 
 	

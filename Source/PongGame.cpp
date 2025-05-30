@@ -57,6 +57,42 @@ namespace ponggame
 
 	void FGame::Init()
 	{
+		srand(static_cast<unsigned int>(time(nullptr)));
+		bIsRKeyPressed = false;
+		StartTime = AEGetTime(nullptr);
+		global::GameState.DeltaTime = 0.f;
+		Ball.posX = 0.f;
+		Ball.posY = 0.f;
+		if (Ball.Mesh == nullptr)
+		{
+			Ball.CreateBallMesh();
+		}
+		float angle = static_cast<float>(rand()) / PI;
+		//		std::cout << angle;
+		Ball.dirX = cosf(angle);
+		Ball.dirY = sinf(angle);
+		float Speed = 200.0f + static_cast<float>(rand()) / RAND_MAX * 300.0f;
+		Ball.dirX *= Speed;
+		Ball.dirY *= Speed;
+
+		LeftActor.score = 0;
+		LeftActor.posY = 0;
+		LeftActor.posX = -800.f * (2.f / 3.f);
+		if (LeftActor.Mesh == nullptr)
+		{
+			LeftActor.Mesh = global::CreateBoxMesh();
+		}
+
+		RightActor.score = 0;
+		RightActor.posY = 0;
+		RightActor.posX = +800.f * (2.f / 3.f);
+		if (RightActor.Mesh == nullptr)
+		{
+			RightActor.Mesh = global::CreateBoxMesh();
+		}
+
+		RightActor.score = 0;
+		global::GameState.ChangeState(global::EGameStateEnum::PONG_GAME);
 	}
 
 	void FGame::Draw()
@@ -156,7 +192,7 @@ namespace ponggame
 				RightActor.score++;
 				if (RightActor.score > 10)
 				{
-					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
+					global::GameState.ChangeState(global::EGameStateEnum::PONG_END);
 				}
 			}
 			if (bIsHitRight)
@@ -164,7 +200,7 @@ namespace ponggame
 				LeftActor.score++;
 				if (LeftActor.score > 10)
 				{
-					global::GameState.GameStateEnum = global::EGameStateEnum::PONG_END;
+					global::GameState.ChangeState(global::EGameStateEnum::PONG_END);
 				}
 			}
 			/*----------------CheckCollision----------------*/
@@ -188,7 +224,7 @@ namespace ponggame
 		}
 		else if (bIsRKeyPressed)
 		{
-			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
+			global::GameState.ChangeState(global::EGameStateEnum::PONG_RESET);
 		}
 	}
 
@@ -197,56 +233,21 @@ namespace ponggame
 		if (ponggame::Game.LeftActor.Mesh != nullptr)
 		{
 			AEGfxMeshFree(ponggame::Game.LeftActor.Mesh);
+			ponggame::Game.LeftActor.Mesh = nullptr;
 		}
 		if (ponggame::Game.RightActor.Mesh != nullptr)
 		{
 			AEGfxMeshFree(ponggame::Game.RightActor.Mesh);
+			ponggame::Game.RightActor.Mesh = nullptr;
 		}
 		if (ponggame::Game.Ball.Mesh != nullptr)
 		{
 			AEGfxMeshFree(ponggame::Game.Ball.Mesh);
+			ponggame::Game.Ball.Mesh = nullptr;
 		}
 	}
 
-	void FGame::ResetGame()
-	{
-		srand(static_cast<unsigned int>(time(nullptr)));
-		bIsRKeyPressed = false;
-		StartTime = AEGetTime(nullptr);
-		global::GameState.DeltaTime = 0.f;
-		Ball.posX = 0.f;
-		Ball.posY = 0.f;
-		if (Ball.Mesh == nullptr)
-		{
-			Ball.CreateBallMesh();
-		}
-		float angle = static_cast<float>(rand()) / PI;
-//		std::cout << angle;
-		Ball.dirX = cosf(angle);
-		Ball.dirY = sinf(angle);
-		float Speed = 200.0f + static_cast<float>(rand()) / RAND_MAX * 300.0f;
-		Ball.dirX *= Speed;
-		Ball.dirY *= Speed;
-
-		LeftActor.score = 0;
-		LeftActor.posY = 0;
-		LeftActor.posX = -800.f*(2.f / 3.f);
-		if (LeftActor.Mesh == nullptr)
-		{
-			LeftActor.Mesh = global::CreateBoxMesh();
-		}
-
-		RightActor.score = 0;
-		RightActor.posY = 0;
-		RightActor.posX = +800.f * (2.f / 3.f);
-		if (RightActor.Mesh == nullptr)
-		{
-			RightActor.Mesh = global::CreateBoxMesh();
-		}
-
-		RightActor.score = 0;
-		global::GameState.GameStateEnum = global::EGameStateEnum::PONG_GAME;
-	}
+	
 
 	void FGame::EndGame()
 	{
@@ -256,7 +257,7 @@ namespace ponggame
 			EndGameTimer += global::GameState.DeltaTime;
 			if (EndGameTimer > 3.f)
 			{
-				global::GameState.GameStateEnum = global::EGameStateEnum::MAIN_MENU;
+				global::GameState.ChangeState(global::EGameStateEnum::MAIN_MENU);
 				EndGameTimer = 0.f;
 			}
 			AEGfxSetBackgroundColor(0.1f, 0.1f, 0.1f);
@@ -282,7 +283,7 @@ namespace ponggame
 		}
 		if (bIsRKeyPressed)
 		{
-			global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
+			global::GameState.ChangeState(global::EGameStateEnum::PONG_RESET);
 		}
 	}
 

@@ -25,10 +25,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     AESysSetWindowTitle("PongGame");
 	global::font = AEGfxCreateFont("Assets/liberation-mono.ttf", 72);
 
-	mainmenu::MainMenu.Init();
-	logo::Logo.Init();
-	animation::Animation.Init();
 	f64 lastTime = AEGetTime(nullptr);
+	global::GameState.ChangeState(global::EGameStateEnum::SPLASH);
 	while (AESysDoesWindowExist())
 	{
 		f64 currentTime = AEGetTime(nullptr);
@@ -36,31 +34,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		lastTime = currentTime;
 //		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
 
-		switch (global::GameState.GameStateEnum)
-		{
-		case global::EGameStateEnum::SPLASH :
-			logo::Logo.Draw();
-			break;
-		case global::EGameStateEnum::MAIN_MENU:
-			mainmenu::MainMenu.Draw();
-			break;
-		case global::EGameStateEnum::ANIMATION:
-			animation::Animation.Draw();
-			break;
-		case global::EGameStateEnum::PONG_RESET:
-			ponggame::Game.ResetGame();
-			break;
-		case global::EGameStateEnum::PONG_GAME:
-			ponggame::Game.Draw();
-			break;
-		case global::EGameStateEnum::PONG_END:
-			ponggame::Game.EndGame();
-			break;
-		}
+		global::GameState.Draw();
 	}
-	ponggame::Game.Exit();
-	mainmenu::MainMenu.Exit();
-	animation::Animation.Exit();
 	AESysExit();
 	return 0;
 }

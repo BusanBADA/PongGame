@@ -24,12 +24,12 @@ namespace mainmenu
 		{
 			if (ButtonA->CheckButtonCollision())
 			{
-				global::GameState.GameStateEnum = global::EGameStateEnum::PONG_RESET;
+				global::GameState.ChangeState(global::EGameStateEnum::PONG_RESET);
 				
 			}
 			else if (ButtonB->CheckButtonCollision())
 			{
-				global::GameState.GameStateEnum = global::EGameStateEnum::ANIMATION;
+				global::GameState.ChangeState(global::EGameStateEnum::ANIMATION);
 			}
 		}
 		AESysFrameEnd();

@@ -28,7 +28,6 @@ namespace ponggame
 		virtual void Init() override;
 		virtual void Draw() override;
 		virtual void Exit() override;
-		void ResetGame();
 		void EndGame();
 	};
 
