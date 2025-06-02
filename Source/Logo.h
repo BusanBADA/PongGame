@@ -7,7 +7,7 @@ namespace logo
 	{
 	public:
 		virtual void Init() override;
-		virtual void Draw() override;
+		virtual void Update() override;
 		virtual void Exit() override;
 		AEGfxTexture* Image = nullptr;
 		AEGfxVertexList* Mesh = nullptr;

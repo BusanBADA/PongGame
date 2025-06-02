@@ -9,7 +9,7 @@ namespace logo
 		Mesh = global::CreateBoxMesh();
 	}
 
-	void FLogo::Draw()
+	void FLogo::Update()
 	{
 		AESysFrameStart();
 		global::GameState.PreGameTimer += global::GameState.DeltaTime;

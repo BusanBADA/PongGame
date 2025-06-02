@@ -9,7 +9,7 @@ namespace mainmenu
 		ButtonB = new button::FButton("ButtonB", 300.f, 50.f, 0.5f, -0.5f);
 	}
 
-	void FMainMenu::Draw()
+	void FMainMenu::Update()
 	{
 		AESysFrameStart();
 		ButtonA->DrawButton();

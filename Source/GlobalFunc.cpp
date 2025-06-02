@@ -59,7 +59,7 @@ namespace global
 	}
 
 	
-	void FGameState::Draw()
+	void FGameState::Update()
 	{
 		if (GameStateEnum != PrevGameStateEnum)
 		{
@@ -98,32 +98,32 @@ namespace global
 				Game.Init();
 				break;
 			case global::EGameStateEnum::PONG_GAME:
-				Game.Draw();
+				Game.Update();
 				break;
 			case global::EGameStateEnum::PONG_END:
-				Game.DrawEndGame();
+				Game.UpdateEndGame();
 				break;
 			}
 		}
 		switch (GameStateEnum)
 		{
 		case global::EGameStateEnum::SPLASH:
-			Logo.Draw();
+			Logo.Update();
 			break;
 		case global::EGameStateEnum::MAIN_MENU:
-			MainMenu.Draw();
+			MainMenu.Update();
 			break;
 		case global::EGameStateEnum::ANIMATION:
-			Animation.Draw();
+			Animation.Update();
 			break;
 		case global::EGameStateEnum::PONG_RESET:
 			Game.ResetGame();
 			break;
 		case global::EGameStateEnum::PONG_GAME:
-			Game.Draw();
+			Game.Update();
 			break;
 		case global::EGameStateEnum::PONG_END:
-			Game.DrawEndGame();
+			Game.UpdateEndGame();
 			break;
 		}
 	}

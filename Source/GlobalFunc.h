@@ -24,7 +24,7 @@ namespace global
 	class FGameState
 	{
 	public:
-		void Draw();
+		void Update();
 		void ChangeState(EGameStateEnum InEnum);
 
 		f64 PreGameTimer = 0.f;

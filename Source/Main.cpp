@@ -31,7 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 		lastTime = currentTime;
 //		std::cout << 1/ ponggame::Game.DeltaTime << std::endl;
 
-		global::GameState.Draw();
+		global::GameState.Update();
 	}
 	AESysExit();
 	return 0;

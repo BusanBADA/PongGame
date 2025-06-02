@@ -29,7 +29,7 @@ namespace animation
         CurrentImage = IdelImage;
         se = AEAudioCreateGroup();
 	}
-    void FAnimation::Draw()
+    void FAnimation::Update()
     {
         AESysFrameStart();
 

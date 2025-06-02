@@ -27,9 +27,9 @@ namespace ponggame
 		bool bIsRKeyPressed = false;
 		f64 EndGameTimer = 0.f;
 		virtual void Init() override;
-		virtual void Draw() override;
+		virtual void Update() override;
 		virtual void Exit() override;
-		void DrawEndGame();
+		void UpdateEndGame();
 		void ResetGame();
 	};
 }

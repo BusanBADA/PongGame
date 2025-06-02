@@ -93,7 +93,7 @@ namespace ponggame
 		global::GameState.ChangeState(global::EGameStateEnum::PONG_GAME);
 	}
 
-	void FGame::Draw()
+	void FGame::Update()
 	{
 		if (!bIsRKeyPressed && AESysDoesWindowExist())
 		{
@@ -247,7 +247,7 @@ namespace ponggame
 
 	
 
-	void FGame::DrawEndGame()
+	void FGame::UpdateEndGame()
 	{
 		if (!bIsRKeyPressed && AESysDoesWindowExist())
 		{

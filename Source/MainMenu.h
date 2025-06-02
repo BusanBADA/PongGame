@@ -8,7 +8,7 @@ namespace mainmenu
 	{
 	public:
 		virtual void Init() override;
-		virtual void Draw() override;
+		virtual void Update() override;
 		virtual void Exit() override;
 
 		button::FButton* ButtonA = nullptr;

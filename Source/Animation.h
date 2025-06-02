@@ -8,7 +8,7 @@ namespace animation
 	{
 	public:
 		virtual void Init() override;
-		virtual void Draw() override;
+		virtual void Update() override;
 		void Reset();
 		virtual void Exit() override;
 
