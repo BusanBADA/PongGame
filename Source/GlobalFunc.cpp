@@ -61,6 +61,50 @@ namespace global
 	
 	void FGameState::Draw()
 	{
+		if (GameStateEnum != PrevGameStateEnum)
+		{
+			switch (GameStateEnum)
+			{
+			case global::EGameStateEnum::SPLASH:
+				Logo.Exit();
+				break;
+			case global::EGameStateEnum::MAIN_MENU:
+				MainMenu.Exit();
+				break;
+			case global::EGameStateEnum::ANIMATION:
+				Animation.Exit();
+				break;
+			case global::EGameStateEnum::PONG_RESET:
+				break;
+			case global::EGameStateEnum::PONG_GAME:
+				break;
+			case global::EGameStateEnum::PONG_END:
+				Game.Exit();
+				break;
+			}
+			GameStateEnum = PrevGameStateEnum;
+			switch (GameStateEnum)
+			{
+			case global::EGameStateEnum::SPLASH:
+				Logo.Init();
+				break;
+			case global::EGameStateEnum::MAIN_MENU:
+				MainMenu.Init();
+				break;
+			case global::EGameStateEnum::ANIMATION:
+				Animation.Init();
+				break;
+			case global::EGameStateEnum::PONG_RESET:
+				Game.Init();
+				break;
+			case global::EGameStateEnum::PONG_GAME:
+				Game.Draw();
+				break;
+			case global::EGameStateEnum::PONG_END:
+				Game.DrawEndGame();
+				break;
+			}
+		}
 		switch (GameStateEnum)
 		{
 		case global::EGameStateEnum::SPLASH:
@@ -73,61 +117,18 @@ namespace global
 			Animation.Draw();
 			break;
 		case global::EGameStateEnum::PONG_RESET:
-			Game.Init();
+			Game.ResetGame();
 			break;
 		case global::EGameStateEnum::PONG_GAME:
 			Game.Draw();
 			break;
 		case global::EGameStateEnum::PONG_END:
-			Game.EndGame();
+			Game.DrawEndGame();
 			break;
 		}
 	}
 	void FGameState::ChangeState(EGameStateEnum InEnum)
 	{
-		switch(GameStateEnum)
-		{
-		case global::EGameStateEnum::SPLASH:
-			Logo.Exit();
-			break;
-		case global::EGameStateEnum::MAIN_MENU:
-			MainMenu.Exit();
-			break;
-		case global::EGameStateEnum::ANIMATION:
-			Animation.Draw();
-			break;
-		case global::EGameStateEnum::PONG_RESET:
-			//Game.Exit();
-			break;
-		case global::EGameStateEnum::PONG_GAME:
-			//Game.Exit();
-			break;
-		case global::EGameStateEnum::PONG_END:
-			Game.Exit();
-			break;
-		}
-		GameStateEnum = InEnum;
-		switch (GameStateEnum)
-		{
-		case global::EGameStateEnum::SPLASH:
-			Logo.Init();
-			break;
-		case global::EGameStateEnum::MAIN_MENU:
-			MainMenu.Init();
-			break;
-		case global::EGameStateEnum::ANIMATION:
-			Animation.Init();
-			break;
-		case global::EGameStateEnum::PONG_RESET:
-			Game.Init();
-			break;
-		case global::EGameStateEnum::PONG_GAME:
-			Game.Draw();
-			break;
-		case global::EGameStateEnum::PONG_END:
-			Game.EndGame();
-			break;
-		}
-		
+		PrevGameStateEnum = InEnum;
 	}
 }

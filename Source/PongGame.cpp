@@ -247,7 +247,7 @@ namespace ponggame
 
 	
 
-	void FGame::EndGame()
+	void FGame::DrawEndGame()
 	{
 		if (!bIsRKeyPressed && AESysDoesWindowExist())
 		{
@@ -283,6 +283,11 @@ namespace ponggame
 		{
 			global::GameState.ChangeState(global::EGameStateEnum::PONG_RESET);
 		}
+	}
+
+	void FGame::ResetGame()
+	{
+		Init();
 	}
 
 }

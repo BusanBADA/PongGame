@@ -12,6 +12,7 @@ namespace global
 
 	enum EGameStateEnum
 	{
+		NONE,
 		SPLASH,
 		MAIN_MENU,
 		ANIMATION,
@@ -31,6 +32,7 @@ namespace global
 		
 	private:
 		EGameStateEnum GameStateEnum;
+		EGameStateEnum PrevGameStateEnum;
 		logo::FLogo Logo;
 		animation::FAnimation Animation;
 		mainmenu::FMainMenu MainMenu;
